@@ -53,11 +53,7 @@ public class TwitterW {
     }
 
     public static void refreshFollowers() {
-<<<<<<< HEAD
-        
-=======
        // wrapper.getFollowersIDs()
->>>>>>> 9ef33e503bb9d30a2a1fa3b112c9cef9f8d6218b
     }
 
     /**
