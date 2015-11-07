@@ -8,31 +8,73 @@ public class Twitter {
 
     private twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
 
-    public void tweet(String msg) {
+    /**
+     * Tweet from the game's account
+     * @param msg
+     */
+    public static void tweet(String msg) {
         StatusUpdate status = new StatusUpdate(msg);
         wrapper.updateStatus(status);
         System.out.println(status);
     }
 
-    public int getFollowers(User user) {
+    /**
+     * Get the number of followers for the specified user
+     * @param user
+     * @return
+     */
+    public static int getFollowers(User user) {
         return user.getFollowersCount();
     }
 
-    public double getScore(User user) {
-        return Math.log(getFollowers(user) + ((double)getLikes(user) / (getFollowing(user) + 1)));
+    /**
+     * Get the user's game score.
+     * In the case of the methods below returning 0, this method will return 1.
+     * <br>
+     * Dependent on getFollowers(), getFollowing() and getLikes()
+     * @param user
+     * @return
+     */
+    public static double getScore(User user) {
+        double d = getFollowers(user) + ((double)getLikes(user) / (getFollowing(user) + 1)));
+        return d <= 0 ? 1 : Math.log(d);
     }
 
-    public User getUser(String handle) {
+    /**
+     * Get the user object for the specified handle (not including the @ character)
+     * @param handle
+     * @return
+     */
+    public static User getUser(String handle) {
         ResponseList<User> response = wrapper.lookupUsers(handle);
         return response.size() == 0 ? null : response.get(0);
     }
 
-    public int getFollowing(User user) {
+    /**
+     * Get the number of users that the specified user follows
+     * @param user
+     * @return
+     */
+    public static int getFollowing(User user) {
         return user.getFriendsCount();
     }
 
-    public int getLikes(User user) {
+    /**
+     * Get the number of tweets that the user has favourited/liked
+     * @param user
+     * @return
+     */
+    public static int getLikes(User user) {
         return user.getFavouritesCount();
+    }
+
+    /**
+     * Get the URL of the user's profile image
+     * @param user
+     * @return
+     */
+    public static String getProfileImageURL(User user) {
+        return user.getProfileImageURL();
     }
 
 }
