@@ -33,6 +33,24 @@ public class TwitterW {
         }
     }
 
+    public static void startFollowerRefresh() {
+        Thread followerThread = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    try {
+                        ArrayList<User> newFollowers = getNewFollowers();
+                        for(User u : newFollowers){
+                            // Add user to world
+                        }
+                        Thread.sleep(1000);
+                    } catch (Exception e) {}
+                }
+            }
+        };
+        followerThread.start();
+    }
+
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
      * @param listener
@@ -73,7 +91,11 @@ public class TwitterW {
     public static void listen(User user) {
         if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
         listenedUsers.add(user.getId());
-        for(long l : listenedUsers) listenQuery.follow(l);
+        long[] d = new long[listenedUsers.size()];
+        int i = 0;
+        for(Long l : listenedUsers) d[i++] = l;
+        listenQuery.follow(d);
+        stream.cleanUp();
         stream.filter(listenQuery);
     }
 
