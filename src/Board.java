@@ -26,31 +26,26 @@ public class Board extends JPanel implements ActionListener {
 
 	public static int B_WIDTH = 1400;
 	public static int B_HEIGHT = 800;
-	private Random rand;
-	int roadCounter;
-	private int DELAY;
-	private Image frogImg;
-	private ArrayList<String> dates;
-	private int dateNum;
-	private Timer timer;
-	private String currentDate;
-	private int dateCounter;
-	private int fileNum;
 	boolean finalLevel = false;
+	public ArrayList<Profile> players;
     
-    public Board() {
+    public void Board() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	B_WIDTH = (int)screenSize.getWidth();
+    	B_HEIGHT = (int)screenSize.getHeight()-100;
         addKeyListener(new TAdapter());
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
         setDoubleBuffered(true);
-
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));        
         
     }
-
-    private void initGame() {
+    
+    public void addPlayer(int size) {
     	
+    }
+    
+    private void initGame() {	
 
     }
 
