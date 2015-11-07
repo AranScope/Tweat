@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Random;
-
 /**
  * Created by aranscope on 07/11/15.
  */
@@ -30,11 +28,6 @@ public class Vector2 {
         this.x /= mag;
         this.y /= mag;
         return this;
-    }
-    
-    public static Vector2 getRandomVector(float maxX, float maxY){
-        Random ra = new Random();
-        return new Vector2(maxX - ra.nextFloat() * 2 * maxX, maxY - ra.nextFloat() * 2 * maxY);
     }
 
     public Vector2 vectorTo(Vector2 target){
