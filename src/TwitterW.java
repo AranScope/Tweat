@@ -42,6 +42,7 @@ public class TwitterW {
                         ArrayList<User> newFollowers = getNewFollowers();
                         for(User u : newFollowers){
                             // Add user to world
+                            System.out.println(u.getScreenName() + " just followed!");
                         }
                         Thread.sleep(1000);
                     } catch (Exception e) {}
@@ -60,6 +61,13 @@ public class TwitterW {
         stream.addListener(listener);
     }
 
+    /**
+     * Returns the new users that have followed the game account since the start of the application, or since the last call to this method.
+     * <br>
+     * Each successive call to this method will not return the same result.
+     * @return
+     * @throws TwitterException
+     */
     public static ArrayList<User> getNewFollowers() throws TwitterException{
         ArrayList<User> allFollowers = getFollowers(gameUser);
         ArrayList<User> result = new ArrayList<User>(allFollowers.size());
@@ -78,8 +86,13 @@ public class TwitterW {
         System.out.println(status);
     }
 
-    public static void refreshFollowers() {
-        // wrapper.getFollowersIDs()
+    /**
+     * Starts listening to the public tweet stream.
+     * <br>
+     * Any added listeners will be called when a new tweet is published
+     */
+    public static void startTheFirehose() {
+        stream.firehose(1000);
     }
 
     /**
@@ -88,16 +101,15 @@ public class TwitterW {
      * The listeners that have been added by onTweet() will be triggered when the user tweets
      * @param user
      */
+    @Deprecated
     public static void listen(User user) {
         if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
         listenedUsers.add(user.getId());
         long[] d = new long[listenedUsers.size()];
         int i = 0;
         for(Long l : listenedUsers) d[i++] = l;
-        stream.site(true, d);
-        //listenQuery.follow(d);
-        //stream.cleanUp();
-        //stream.filter(listenQuery);
+        listenQuery.follow(d);
+        stream.filter(listenQuery);
     }
 
     /**
