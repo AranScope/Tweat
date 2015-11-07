@@ -25,5 +25,6 @@
     <orderEntry type="module" module-name="test4" />
     <orderEntry type="module" module-name="main4" />
     <orderEntry type="module" module-name="test2" />
+    <orderEntry type="library" name="twitter4j-async-4.0.4" level="project" />
   </component>
 </module>
