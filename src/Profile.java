@@ -35,12 +35,21 @@ public class Profile {
 		}
 		
 		private void move() {	
-			pos = pos.add(pos.vectorTowards(targetVec.mult(1000)).normalise().mult(vel));
+			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
+			targetVec = targetVec.add(pos.vectorTowards(targetVec).normalise().mult(vel));
 			//pos = pos.add(new Vector2(1,1));
 		}
 		
 		private void checkCollision() {
-			
+			for (Profile p: Board.players) {
+				if (p.getSize() < size && p.getSize() > 0) {
+					if (pos.getDistanceTo(p.getVector()) < size/2) {
+						this.size += 4*Math.log(p.getSize()+1)/(size*0.1f);
+						p.setSize(-1);
+						
+					}
+				}
+			}
 		}
 		
 		public void newTarget(Profile target) {
@@ -72,7 +81,14 @@ public class Profile {
 			
 		}
 		
-		public boolean getAlive() {
+		public float getSize() {
+			return size;
+		}
+		
+		public void setSize(float size) {
+			this.size = size;
+		}
+		public boolean isAlive() {
 			return alive;
 		}	
 }

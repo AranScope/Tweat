@@ -22,6 +22,10 @@ public class Vector2 {
     public void setY(float y){
         this.y = y;
     }
+    
+    public float getDistanceTo(Vector2 target) {
+    	return (float)Math.sqrt(Math.pow(target.x-this.x, 2)+Math.pow(target.y-this.y, 2));
+    }
 
     public Vector2 normalise(){
         float mag = (float)Math.sqrt(x*x + y*y);

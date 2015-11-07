@@ -23,7 +23,7 @@ public class Board extends JPanel implements ActionListener {
 	public static final int MAX_HEIGHT = 800;
 	public static final int DELAY = 2;
 	
-	public ArrayList<Profile> players;
+	public static ArrayList<Profile> players;
     
     public Board() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -62,7 +62,10 @@ public class Board extends JPanel implements ActionListener {
     
     private void paintGame(Graphics g) {
     	for (Profile p: players) {
-    		p.draw(g);
+    		if (p.isAlive()) p.draw(g);
+    		else {
+    			players.remove(p);
+    		}
     	}
     }
     
