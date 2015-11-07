@@ -1,14 +1,4 @@
 import twitter4j.*;
-import twitter4j.FilterQuery;
-import twitter4j.ResponseList;
-import twitter4j.StatusListener;
-import twitter4j.StatusUpdate;
-import twitter4j.TwitterException;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
-import twitter4j.User;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.OAuth2Token;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -29,8 +19,8 @@ public class TwitterW {
         ConfigurationBuilder b = new ConfigurationBuilder();
         b.setOAuthConsumerKey("xqlljOXRePfUjb5D48sXrUPUo").setOAuthConsumerSecret("zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC")
                 .setOAuthAccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS").setOAuthAccessTokenSecret("1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk");
-       Configuration config = b.build();
-        //stream = new TwitterStreamFactory(config).getInstance();
+        Configuration config = b.build();
+        stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
     }
 
@@ -46,14 +36,14 @@ public class TwitterW {
      * Tweet from the game's account
      * @param msg
      */
-    public static void tweet(String msg) throws TwitterException{
+    public static void tweet(String msg) throws TwitterException {
         StatusUpdate status = new StatusUpdate(msg);
         wrapper.updateStatus(status);
         System.out.println(status);
     }
 
     public static void refreshFollowers() {
-       // wrapper.getFollowersIDs()
+        // wrapper.getFollowersIDs()
     }
 
     /**
@@ -73,8 +63,8 @@ public class TwitterW {
      * @param user
      * @throws TwitterException
      */
-    public static void follow(User user) throws TwitterException{
-        wrapper.createFriendship(user.getName());
+    public static void follow(User user) throws TwitterException {
+        wrapper.createFriendship(user.getId());
     }
 
     /**
@@ -82,8 +72,24 @@ public class TwitterW {
      * @param user
      * @return
      */
-    public static int getFollowers(User user) {
+    public static int getFollowerCount(User user) {
         return user.getFollowersCount();
+    }
+
+    /**
+     * Get a list of followers of the specified user.
+     * @param user
+     * @return
+     * @throws TwitterException
+     */
+    public static ArrayList<User> getFollowers(User user) throws TwitterException{
+        PagableResponseList<User> followers =  wrapper.getFollowersList(user.getId(), -1);
+        ArrayList<User> followersArrayList = new ArrayList<>(followers.size());
+        for(User follower: followers){
+            followersArrayList.add(follower);
+        }
+
+        return followersArrayList;
     }
 
     /**
@@ -94,9 +100,9 @@ public class TwitterW {
      * @param user
      * @return
      */
-    public static double getScore(User user) {
-        double d = getFollowers(user) + ((double)getLikes(user) / (getFollowing(user) + 1));
-        return d <= 0 ? 1 : Math.log(d);
+    public static float getSize(User user) {
+        float d = getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1));
+        return d <= 0 ? 1 : (float)Math.log(d);
     }
 
     /**
@@ -104,7 +110,7 @@ public class TwitterW {
      * @param handle
      * @return
      */
-    public static User getUser(String handle) throws TwitterException{
+    public static User getUser(String handle) throws TwitterException {
         ResponseList<User> response = wrapper.lookupUsers(handle);
         return response.size() == 0 ? null : response.get(0);
     }
@@ -147,7 +153,7 @@ public class TwitterW {
         File dest;
         try {
             dest = File.createTempFile("res/tmp/" + user.getName(), ".png");
-            URL url = new URL(getProfileImageURL(user));
+            URL url = new URL(user.getBiggerProfileImageURL());
             InputStream is = url.openStream();
             OutputStream os = new FileOutputStream(dest);
 
