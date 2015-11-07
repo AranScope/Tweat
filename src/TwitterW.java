@@ -30,7 +30,7 @@ public class TwitterW {
         b.setOAuthConsumerKey("xqlljOXRePfUjb5D48sXrUPUo").setOAuthConsumerSecret("zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC")
                 .setOAuthAccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS").setOAuthAccessTokenSecret("1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk");
        Configuration config = b.build();
-        stream = new TwitterStreamFactory(config).getInstance();
+        //stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
     }
 
