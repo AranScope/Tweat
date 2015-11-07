@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 //import twitter4j.*;
@@ -10,14 +13,16 @@ public class Profile {
 		private Profile target;
 		private Vector2 targetVec;
 		private boolean alive;
+		private String name;
 		
-		public Profile(float size) {
+		public Profile(float size, String name) {
 			this.size =size;
 			alive = true;
 			vel = 5f/size;
-			pos = new Vector2(50,50);
+			pos = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			System.out.println();
+			this.name = name;
 						
 		}
 		
@@ -26,11 +31,11 @@ public class Profile {
 			checkCollision();
 			if (size < 0) {
 				alive = false;
-			}
+			}			
 		}
 		
 		private void move() {	
-			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
+			pos = pos.add(pos.vectorTowards(targetVec.mult(1000)).normalise().mult(vel));
 			//pos = pos.add(new Vector2(1,1));
 		}
 		
@@ -41,6 +46,7 @@ public class Profile {
 		public void newTarget(Profile target) {
 			this.target = target;
 			targetVec = target.getVector();
+			System.out.println(targetVec);
 		}
 		
 		public Vector2 getVector() {
@@ -53,7 +59,17 @@ public class Profile {
 		
 		
 		public void draw(Graphics g) {	
-			g.drawOval((int)(pos.getX()+size/2), (int)(pos.getY()+size/2), (int)(size),(int)(size));
+			g.setColor(Color.white);
+			g.fillOval((int)(pos.getX()-size/2), (int)(pos.getY()-size/2), (int)(size),(int)(size));
+			g.setColor(Color.black);
+			g.drawOval((int)(pos.getX()-size/2), (int)(pos.getY()-size/2), (int)(size),(int)(size));
+			Font small = new Font("Helvetica", Font.BOLD, 14);
+			g.setFont(small);
+			FontMetrics metr;
+    		metr = g.getFontMetrics(small);
+    		g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY()+metr.getHeight()/3));
+			
+			
 		}
 		
 		public boolean getAlive() {

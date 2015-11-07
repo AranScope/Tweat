@@ -21,7 +21,7 @@ public class Board extends JPanel implements ActionListener {
 	public static int B_HEIGHT = 800;
 	public static final int MAX_WIDTH = 1400;
 	public static final int MAX_HEIGHT = 800;
-	public static final int DELAY = 500;
+	public static final int DELAY = 2;
 	
 	public ArrayList<Profile> players;
     
@@ -33,21 +33,21 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(new TAdapter());
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
-        setDoubleBuffered(true);
+        setDoubleBuffered(false);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));        
         
     }
     
-    public void addPlayer(int size) {
-    	players.add(new Profile(size));
+    public void addPlayer(int size, String name) {
+    	players.add(new Profile(size, name));
     }
     
     private void initGame() {	
     	timer = new Timer(DELAY, this);
         timer.start(); 
         players = new ArrayList<>();
-        addPlayer(20);
-        addPlayer(50);
+        addPlayer(20, "Gary");
+        addPlayer(50, "Fat Sam");
         players.get(0).newTarget(players.get(1));
         players.get(1).newTarget(players.get(0));
     }

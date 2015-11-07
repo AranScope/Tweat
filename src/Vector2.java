@@ -24,7 +24,7 @@ public class Vector2 {
     }
 
     public Vector2 normalise(){
-        float mag = this.abs();
+        float mag = (float)Math.sqrt(x*x + y*y);
         this.x /= mag;
         this.y /= mag;
         return this;
@@ -32,7 +32,7 @@ public class Vector2 {
     
     public static Vector2 getRandomVector(float maxX, float maxY){
         Random ra = new Random();
-        return new Vector2(maxX - ra.nextFloat() * 2 * maxX, maxY - ra.nextFloat() * 2 * maxY);
+        return new Vector2(ra.nextFloat() * maxX, ra.nextFloat() * maxY);
     }
 
     public Vector2 vectorTowards(Vector2 target){
@@ -67,7 +67,11 @@ public class Vector2 {
         this.x = x;
         this.y = y;
     }
-
+    
+    public String toString() {
+    	return "("+x+", "+y+")";
+    }
+    
     public Vector2(){
 
     }
