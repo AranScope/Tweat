@@ -1,3 +1,5 @@
+import java.awt.Graphics;
+
 //import twitter4j.*;
 
 public class Profile {
@@ -6,12 +8,17 @@ public class Profile {
 		private float size;
 		private float vel;
 		private Profile target;
+		private Vector2 targetVec;
 		private boolean alive;
 		
-		public void Profile(float size) {
+		public Profile(float size) {
 			this.size =size;
 			alive = true;
-			vel = 2;
+			vel = 5f/size;
+			pos = new Vector2(50,50);
+			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
+			System.out.println();
+						
 		}
 		
 		public void update() {
@@ -23,9 +30,8 @@ public class Profile {
 		}
 		
 		private void move() {	
-			if (target != null) {
-				pos = pos.vectorTowards(target.getVector().normalise().mult(2));
-			}
+			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
+			//pos = pos.add(new Vector2(1,1));
 		}
 		
 		private void checkCollision() {
@@ -34,6 +40,7 @@ public class Profile {
 		
 		public void newTarget(Profile target) {
 			this.target = target;
+			targetVec = target.getVector();
 		}
 		
 		public Vector2 getVector() {
@@ -45,4 +52,11 @@ public class Profile {
 		}
 		
 		
+		public void draw(Graphics g) {	
+			g.drawOval((int)(pos.getX()+size/2), (int)(pos.getY()+size/2), (int)(size),(int)(size));
+		}
+		
+		public boolean getAlive() {
+			return alive;
+		}	
 }

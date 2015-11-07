@@ -12,18 +12,22 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
 
+	private Timer timer;
 	public static int B_WIDTH = 1400;
 	public static int B_HEIGHT = 800;
-	public final int MAX_WIDTH = 10000;
-	public final int MAX_HEIGHT = 10000;
+	public static final int MAX_WIDTH = 1400;
+	public static final int MAX_HEIGHT = 800;
+	public static final int DELAY = 500;
 	
 	public ArrayList<Profile> players;
     
-    public void Board() {
+    public Board() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	initGame();
     	B_WIDTH = (int)screenSize.getWidth();
     	B_HEIGHT = (int)screenSize.getHeight()-100;
         addKeyListener(new TAdapter());
@@ -35,22 +39,31 @@ public class Board extends JPanel implements ActionListener {
     }
     
     public void addPlayer(int size) {
-    	
+    	players.add(new Profile(size));
     }
     
     private void initGame() {	
-
+    	timer = new Timer(DELAY, this);
+        timer.start(); 
+        players = new ArrayList<>();
+        addPlayer(20);
+        addPlayer(50);
+        players.get(0).newTarget(players.get(1));
+        players.get(1).newTarget(players.get(0));
     }
 
    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        paintGame(g);
     }
    
     
     private void paintGame(Graphics g) {
-  
+    	for (Profile p: players) {
+    		p.draw(g);
+    	}
     }
     
     private void paintMenu(Graphics g) {
@@ -60,6 +73,10 @@ public class Board extends JPanel implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
+    	for (Profile p: players) {
+    		p.update();
+    	}
+    	repaint();
     }
 
 	
