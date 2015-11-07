@@ -25,17 +25,14 @@ public class TwitterW {
     private static FilterQuery listenQuery = new FilterQuery();
 
     static {
-<<<<<<< HEAD
         /*try {
             stream.setOAuthAccessToken(wrapper.getOAuthAccessToken());
             stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
         } catch (TwitterException e){
             System.err.println("TwitterW.<static> : " + e.getErrorMessage());
         }*/
-=======
         stream.setOAuthAccessToken(new AccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS", "1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk"));
         stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
->>>>>>> 9ef33e503bb9d30a2a1fa3b112c9cef9f8d6218b
     }
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
