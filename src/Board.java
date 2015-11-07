@@ -14,6 +14,8 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import twitter4j.TwitterException;
+
 public class Board extends JPanel implements ActionListener {
 
 	private Timer timer;
@@ -50,6 +52,12 @@ public class Board extends JPanel implements ActionListener {
         addPlayer(50, "Fat Sam");
         players.get(0).newTarget(players.get(1));
         players.get(1).newTarget(players.get(0));
+        try {
+			TwitterW.tweet("@PeranTruscott #gamestarting");
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
    

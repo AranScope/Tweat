@@ -24,12 +24,12 @@ public class TwitterW {
     private static FilterQuery listenQuery = new FilterQuery();
 
     static {
-        try {
+        /*try {
             stream.setOAuthAccessToken(wrapper.getOAuthAccessToken());
             stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
         } catch (TwitterException e){
             System.err.println("TwitterW.<static> : " + e.getErrorMessage());
-        }
+        }*/
     }
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
@@ -50,7 +50,7 @@ public class TwitterW {
     }
 
     public static void refreshFollowers() {
-        wrapper.getFollowersIDs()
+        
     }
 
     /**
