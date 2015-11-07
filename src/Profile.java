@@ -14,6 +14,7 @@ public class Profile {
 		private Vector2 targetVec;
 		private boolean alive;
 		private String name;
+		private float radius;
 		
 		public Profile(float size, String name) {
 			this.size =size;
@@ -27,6 +28,7 @@ public class Profile {
 		}
 		
 		public void update() {
+			calcRadius();
 			move();
 			checkCollision();
 			if (size < 0) {
@@ -42,9 +44,9 @@ public class Profile {
 		
 		private void checkCollision() {
 			for (Profile p: Board.players) {
-				if (p.getSize() < size && p.getSize() > 0) {
+				if (p.getRadius() < size && p.getRadius() > 0) {
 					if (pos.getDistanceTo(p.getVector()) < size/2) {
-						this.size += 4*Math.log(p.getSize()+1)/(size*0.1f);
+						this.size += 4*Math.log(p.getRadius()+1)/(size*0.1f);
 						p.setSize(-1);
 						
 					}
@@ -81,8 +83,12 @@ public class Profile {
 			
 		}
 		
-		public float getSize() {
-			return size;
+		private void calcRadius() {
+			this.radius = (float) (40*size*Math.log(size)/6);
+		}
+		
+		public float getRadius() {
+			return radius;
 		}
 		
 		public void setSize(float size) {
