@@ -26,9 +26,9 @@ public class TwitterW {
         Configuration config = b.build();
         stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
-        try{
+        try {
             gameUser = getUser("tweatgame");
-        }catch (TwitterException e){
+        } catch (TwitterException e) {
             e.printStackTrace();
         }
     }
@@ -94,9 +94,10 @@ public class TwitterW {
         long[] d = new long[listenedUsers.size()];
         int i = 0;
         for(Long l : listenedUsers) d[i++] = l;
-        listenQuery.follow(d);
-        stream.cleanUp();
-        stream.filter(listenQuery);
+        stream.site(true, d);
+        //listenQuery.follow(d);
+        //stream.cleanUp();
+        //stream.filter(listenQuery);
     }
 
     /**
