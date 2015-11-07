@@ -11,7 +11,6 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.imageio.ImageIO;
-import javax.xml.ws.Response;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -20,14 +19,17 @@ import java.util.ArrayList;
 public class TwitterW {
 
     private static twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
-    private static TwitterStream stream = new TwitterStreamFactory(new ConfigurationBuilder().setJSONStoreEnabled(true).build()).getInstance();
+    private static TwitterStream stream;
     private static ArrayList<Long> listenedUsers = new ArrayList<>();
     private static FilterQuery listenQuery = new FilterQuery();
 
     static {
-        stream.setOAuthAccessToken(new AccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS", "1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk"));
-        stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
+        ConfigurationBuilder b = new ConfigurationBuilder();
+        b.setOAuthConsumerKey("xqlljOXRePfUjb5D48sXrUPUo").setOAuthConsumerSecret("zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC")
+                .setOAuthAccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS").setOAuthAccessTokenSecret("1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk");
+        stream = new TwitterStreamFactory((b.build())).getInstance();
     }
+
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
      * @param listener
