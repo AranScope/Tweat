@@ -13,7 +13,6 @@ public class TwitterW {
 
     private static twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
     private static TwitterStream stream;
-    private static ArrayList<Long> listenedUsers = new ArrayList<>();
     private static FilterQuery listenQuery = new FilterQuery();
     private static ArrayList<User> followers = new ArrayList<>();
     private static User gameUser;
@@ -62,21 +61,6 @@ public class TwitterW {
     }
 
     /**
-     * Returns the new users that have followed the game account since the start of the application, or since the last call to this method.
-     * <br>
-     * Each successive call to this method will not return the same result.
-     * @return
-     * @throws TwitterException
-     */
-    public static ArrayList<User> getNewFollowers() throws TwitterException{
-        ArrayList<User> allFollowers = getFollowers(gameUser);
-        ArrayList<User> result = new ArrayList<User>(allFollowers.size());
-        for(User u : allFollowers) if(!followers.contains(u)) result.add(u);
-        followers = allFollowers;
-        return result;
-    }
-
-    /**
      * Tweet from the game's account
      * @param msg
      */
@@ -87,16 +71,6 @@ public class TwitterW {
     }
 
     /**
-     * Starts listening to the public tweet stream.
-     * <br>
-     * Any added listeners will be called when a new tweet is published
-     */
-    @Deprecated
-    public static void startTheFirehose() {
-        stream.firehose(1000);
-    }
-
-    /**
      * Listens to tweets from the specified users.
      * <br>
      * Only call this once.
@@ -104,12 +78,15 @@ public class TwitterW {
      * The listeners that have been added by onTweet() will be triggered when the user tweets
      * @param users
      */
-    @Deprecated
     public static void listen(User... users) {
         if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
         long[] d = new long[users.length];
         int i = 0;
-        for(User u : users) d[i++] = u.getId();
+        for(User u : users){
+            long id = u.getId();
+            System.out.println("Listening to id #" + id);
+            d[i++] = id;
+        }
         listenQuery.follow(d);
         stream.filter(listenQuery);
     }
