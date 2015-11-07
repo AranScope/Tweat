@@ -1,5 +1,3 @@
-package com.company;
-
 /**
  * Created by aranscope on 07/11/15.
  */
@@ -30,7 +28,7 @@ public class Vector2 {
         return this;
     }
 
-    public Vector2 vectorTo(Vector2 target){
+    public Vector2 vectorTowards(Vector2 target){
         return new Vector2(target.getX() - this.x, target.getY() - this.y);
     }
 

@@ -1,21 +1,20 @@
+//import twitter4j.*;
 
 public class Profile {
 	
-		private int x;
-		private int y;
-		private int size;
-		private int speed;
-		private int targetX;
-		private int targetY;
-		boolean alive;
+		private Vector2 pos;
+		private float size;
+		private float vel;
+		private Profile target;
+		private boolean alive;
 		
-		public void Profile(int size) {
+		public void Profile(float size) {
 			this.size =size;
-			this.speed = 10;
 			alive = true;
+			vel = 2;
 		}
 		
-		public void updatePerson() {
+		public void update() {
 			move();
 			checkCollision();
 			if (size < 0) {
@@ -23,12 +22,26 @@ public class Profile {
 			}
 		}
 		
-		private void move() {
-						
+		private void move() {	
+			if (target != null) {
+				pos = pos.vectorTowards(target.getVector().normalise().mult(2));
+			}
 		}
 		
 		private void checkCollision() {
 			
+		}
+		
+		public void newTarget(Profile target) {
+			this.target = target;
+		}
+		
+		public Vector2 getVector() {
+			return pos;
+		}
+		
+		public void setVector(Vector2 newPos) {
+			this.pos = newPos;
 		}
 		
 		
