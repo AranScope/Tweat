@@ -7,6 +7,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.User;
+import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.imageio.ImageIO;
@@ -24,12 +25,8 @@ public class TwitterW {
     private static FilterQuery listenQuery = new FilterQuery();
 
     static {
-        try {
-            stream.setOAuthAccessToken(wrapper.getOAuthAccessToken());
-            stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
-        } catch (TwitterException e){
-            System.err.println("TwitterW.<static> : " + e.getErrorMessage());
-        }
+        stream.setOAuthAccessToken(new AccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS", "1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk"));
+        stream.setOAuthConsumer("xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC");
     }
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
@@ -50,7 +47,7 @@ public class TwitterW {
     }
 
     public static void refreshFollowers() {
-        wrapper.getFollowersIDs()
+       // wrapper.getFollowersIDs()
     }
 
     /**
