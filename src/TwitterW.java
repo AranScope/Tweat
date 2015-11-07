@@ -91,23 +91,25 @@ public class TwitterW {
      * <br>
      * Any added listeners will be called when a new tweet is published
      */
+    @Deprecated
     public static void startTheFirehose() {
         stream.firehose(1000);
     }
 
     /**
-     * Listens to tweets from the specified user.
+     * Listens to tweets from the specified users.
+     * <br>
+     * Only call this once.
      * <br>
      * The listeners that have been added by onTweet() will be triggered when the user tweets
-     * @param user
+     * @param users
      */
     @Deprecated
-    public static void listen(User user) {
+    public static void listen(User... users) {
         if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
-        listenedUsers.add(user.getId());
-        long[] d = new long[listenedUsers.size()];
+        long[] d = new long[users.length];
         int i = 0;
-        for(Long l : listenedUsers) d[i++] = l;
+        for(User u : users) d[i++] = u.getId();
         listenQuery.follow(d);
         stream.filter(listenQuery);
     }
