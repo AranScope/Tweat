@@ -26,6 +26,7 @@ public class Board extends JPanel implements ActionListener {
 	public static final int DELAY = 2;
 	
 	public static ArrayList<Profile> players;
+	private static ArrayList<Profile> toRemove;
     
     public Board() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -36,7 +37,7 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
         setDoubleBuffered(false);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));        
+        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));  
         
     }
     
@@ -48,16 +49,17 @@ public class Board extends JPanel implements ActionListener {
     	timer = new Timer(DELAY, this);
         timer.start(); 
         players = new ArrayList<>();
-        addPlayer(20, "Gary");
-        addPlayer(50, "Fat Sam");
+        addPlayer(5, "Gary");
+        addPlayer(10, "Fat Sam");
         players.get(0).newTarget(players.get(1));
         players.get(1).newTarget(players.get(0));
-        try {
+        toRemove = new ArrayList<>();
+        /*try {
 			TwitterW.tweet("@PeranTruscott #gamestarting");
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
     }
 
    
@@ -72,8 +74,12 @@ public class Board extends JPanel implements ActionListener {
     	for (Profile p: players) {
     		if (p.isAlive()) p.draw(g);
     		else {
-    			players.remove(p);
+    			toRemove.add(p);
     		}
+    	}
+    	for (Profile p: toRemove) {
+    		players.remove(p);
+    		System.out.println("Removing");
     	}
     }
     
