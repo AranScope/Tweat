@@ -12,7 +12,7 @@ public class Twitter {
      * Tweet from the game's account
      * @param msg
      */
-    public void tweet(String msg) {
+    public static void tweet(String msg) {
         StatusUpdate status = new StatusUpdate(msg);
         wrapper.updateStatus(status);
         System.out.println(status);
@@ -23,7 +23,7 @@ public class Twitter {
      * @param user
      * @return
      */
-    public int getFollowers(User user) {
+    public static int getFollowers(User user) {
         return user.getFollowersCount();
     }
 
@@ -35,7 +35,7 @@ public class Twitter {
      * @param user
      * @return
      */
-    public double getScore(User user) {
+    public static double getScore(User user) {
         double d = getFollowers(user) + ((double)getLikes(user) / (getFollowing(user) + 1)));
         return d <= 0 ? 1 : Math.log(d);
     }
@@ -45,7 +45,7 @@ public class Twitter {
      * @param handle
      * @return
      */
-    public User getUser(String handle) {
+    public static User getUser(String handle) {
         ResponseList<User> response = wrapper.lookupUsers(handle);
         return response.size() == 0 ? null : response.get(0);
     }
@@ -55,7 +55,7 @@ public class Twitter {
      * @param user
      * @return
      */
-    public int getFollowing(User user) {
+    public static int getFollowing(User user) {
         return user.getFriendsCount();
     }
 
@@ -64,7 +64,7 @@ public class Twitter {
      * @param user
      * @return
      */
-    public int getLikes(User user) {
+    public static int getLikes(User user) {
         return user.getFavouritesCount();
     }
 
@@ -73,7 +73,7 @@ public class Twitter {
      * @param user
      * @return
      */
-    public String getProfileImageURL(User user) {
+    public static String getProfileImageURL(User user) {
         return user.getProfileImageURL();
     }
 
