@@ -42,6 +42,10 @@ public class Vector2 {
         return new Vector2(this.x * multVector.getX(), this.y * multVector.getY());
     }
 
+    public Vector2 mult(float val){
+            return new Vector2(this.x * val, this.y * val);
+    }
+
     public Vector2 div(Vector2 divVector){
         return new Vector2(this.x/divVector.getX(), this.y/divVector.getY());
     }
