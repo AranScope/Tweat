@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class TwitterW {
 
@@ -14,6 +15,9 @@ public class TwitterW {
     private static TwitterStream stream;
     private static ArrayList<Long> listenedUsers = new ArrayList<>();
     private static FilterQuery listenQuery = new FilterQuery();
+    private static ArrayList<User> followers = new ArrayList<>();
+    private static User gameUser;
+    private static boolean listenerAdded;
 
     static {
         ConfigurationBuilder b = new ConfigurationBuilder();
@@ -22,6 +26,11 @@ public class TwitterW {
         Configuration config = b.build();
         stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
+        try{
+            gameUser = getUser("tweatgame");
+        }catch (TwitterException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -29,7 +38,16 @@ public class TwitterW {
      * @param listener
      */
     public static void onTweet(StatusListener listener) {
+        listenerAdded = true;
         stream.addListener(listener);
+    }
+
+    public static ArrayList<User> getNewFollowers() throws TwitterException{
+        ArrayList<User> allFollowers = getFollowers(gameUser);
+        ArrayList<User> result = new ArrayList<User>(allFollowers.size());
+        for(User u : allFollowers) if(!followers.contains(u)) result.add(u);
+        followers = allFollowers;
+        return result;
     }
 
     /**
@@ -53,6 +71,7 @@ public class TwitterW {
      * @param user
      */
     public static void listen(User user) {
+        if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
         listenedUsers.add(user.getId());
         for(long l : listenedUsers) listenQuery.follow(l);
         stream.filter(listenQuery);
