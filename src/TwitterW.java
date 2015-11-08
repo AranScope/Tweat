@@ -96,6 +96,10 @@ public class TwitterW {
      * @throws TwitterException
      */
     public static void follow(User user) throws TwitterException {
+        long[] ids = wrapper.getFriendsIDs(gameUser.getId()).getIDs();
+        for(long l : ids){
+            if(l == user.getId()) return;
+        }
         wrapper.createFriendship(user.getId());
     }
 
