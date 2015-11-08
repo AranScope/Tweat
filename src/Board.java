@@ -8,8 +8,6 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,16 +46,11 @@ public class Board extends JPanel implements ActionListener {
     	MAX_WIDTH = B_WIDTH;
     	MAX_HEIGHT = B_HEIGHT;
     	initGame();
-        addKeyListener(new TAdapter());
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
         setDoubleBuffered(false);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));  
         
-    }
-    
-    public void addPlayer(User user) {
-    	players.add(new Profile(user));
     }
     
     private void initGame() {
@@ -200,7 +193,7 @@ public class Board extends JPanel implements ActionListener {
     		players.add(new Profile(p.getUser()));
     		
     	}
-    	toRevive = new ArrayList<>();
+    	toRevive.clear();
     }
     
     
@@ -210,16 +203,5 @@ public class Board extends JPanel implements ActionListener {
     		p.update();
     	}
     	repaint();
-    }
-
-	
-    private class TAdapter extends KeyAdapter {
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-
-            int key = e.getKeyCode();
-
-        }	
     }
 }
