@@ -27,6 +27,10 @@ public class Profile {
 
 		private long startTime = 0;
 
+	public Vector2 getTargetVec(){
+		return this.targetVec;
+	}
+
 	public String[] deathMsgs = {
 			"%s got #rekt! #TwEAT",
 			"Looks like %s got violated #TwEAT",
@@ -68,7 +72,7 @@ public class Profile {
 					startTime = -1;
 				}
 			}
-			
+
 			calcRadius();
 			move();
 			checkCollision();

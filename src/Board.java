@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextLayout;
+import java.text.AttributedString;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +31,7 @@ public class Board extends JPanel implements ActionListener {
 	public static float scale;
 
     private Profile[] leaderBoard;
+    private ArrayList<Status> tweets = new ArrayList<>();
 
     private DecimalFormat df = new DecimalFormat("#0.00");
 	
@@ -84,6 +88,12 @@ public class Board extends JPanel implements ActionListener {
             	
                 @Override
                 public void onStatus(Status status) {
+                    if(tweets.size() > 5){
+                        tweets.remove(0);
+                    }
+
+                    tweets.add(status);
+
                     Matcher m = r.matcher(status.getText());
                     String userName = "";
                     
@@ -94,6 +104,7 @@ public class Board extends JPanel implements ActionListener {
                     top:for (Profile p: players) {
                     	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
                     		p.setTweet(status.getText());
+
                     		p.setSize(p.getSize()+4/p.getSize());
                     		for (Profile q: players) {
                     			if (q.getName().equalsIgnoreCase("@"+userName)) {
@@ -175,16 +186,21 @@ public class Board extends JPanel implements ActionListener {
     	}
 
         paintLeaderboard(g2);
+        paintFeed(g2);
     }
 
     private void paintLeaderboard(Graphics2D g){
         int xOffset = getWidth() - 210;
-        int yOffset = 10;
+        int yOffset = 35;
         int height = 40;
         int width = 200;
         int margin = 5;
 
         g.setFont(new Font("Seruf", Font.PLAIN, 15));
+
+        g.setColor(Color.white);
+        g.drawString("Leaderboard", 10 + xOffset, yOffset - 10);
+
 
         for(int count = 0; count < leaderBoard.length; count++){
             g.setColor(new Color(255, 255, 255, 200));
@@ -194,6 +210,50 @@ public class Board extends JPanel implements ActionListener {
             g.drawString(leaderBoard[count].getName(), 10 + xOffset, 25 + yOffset + (count * (height + margin)));
 
             g.drawString("" + df.format(leaderBoard[count].getSize()), 10 + xOffset + width - 60, 25 + yOffset + (count * (height + margin)));
+        }
+    }
+
+    private void paintFeed(Graphics2D g){
+        int xOffset = getWidth() - 210;
+        int yOffset = 300;
+        int height = 70;
+        int width = 200;
+        int margin = 5;
+
+        g.setFont(new Font("Seruf", Font.PLAIN, 15));
+        g.setColor(Color.white);
+        g.drawString("Twitter Feed", 10 + xOffset, yOffset - 10);
+
+
+        int posCount = 0;
+
+        for(int count = tweets.size() - 1; count >= 0; count--){
+            if(tweets.get(count) != null) {
+                g.setColor(new Color(255, 255, 255, 200));
+                g.fillRoundRect(xOffset, yOffset + (posCount * (height + margin)), width, height, 15, 15);
+
+                g.setColor(Color.decode("0x4099FF"));
+                g.drawString("@" + tweets.get(count).getUser().getScreenName(), 10 + xOffset, 25 + yOffset + (posCount * (height + margin)));
+                drawParagraph(g, tweets.get(count).getText(), 180, 10 + xOffset, 35 + yOffset + (posCount * (height + margin)));
+                posCount++;
+            }
+        }
+
+
+    }
+
+    void drawParagraph(Graphics2D g, String paragraph, float width, float x, float y) {
+        LineBreakMeasurer linebreaker = new LineBreakMeasurer(new AttributedString(paragraph)
+                .getIterator(), g.getFontRenderContext());
+
+        int count = 0;
+        while (linebreaker.getPosition() < paragraph.length()) {
+            TextLayout tl = linebreaker.nextLayout(width);
+            y += tl.getAscent();
+            tl.draw(g, x, y);
+            y += tl.getDescent() + tl.getLeading();
+            count += 1;
+            if(count == 2) break;
         }
     }
 
