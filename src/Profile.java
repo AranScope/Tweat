@@ -20,6 +20,7 @@ public class Profile {
 		private User user;
 		private BufferedImage image;
 		private String tweet = "";
+		public boolean isFollowed;
 		
 		public Profile(User user) {
 			this.user = user;
