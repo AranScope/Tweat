@@ -36,6 +36,15 @@ public class Board extends JPanel implements ActionListener {
 	public static int MAX_HEIGHT = 800;
 	public static final int DELAY = 1;
 	public static float scale;
+
+    public String[] deathMsgs = {
+            "You got #rekt by @%s! #TwEAT",
+            "Looks like @%s violated you #TwEAT",
+            "You've been #dispatched by @%s! #TwEAT",
+            "You've been drowned in @%s #TwEAT",
+            "Looks like @%s was hungry #TwEAT",
+            "You are now one with @%s #TwEAT"
+    };
 	
 	public static ArrayList<Profile> players;
 	private static ArrayList<Profile> toRevive;
@@ -199,9 +208,9 @@ public class Board extends JPanel implements ActionListener {
     	}
     	for (Profile p: toRevive) {
     		players.remove(p);
-    		System.out.println("Reviving");
     		try {
-                TwitterW.tweet("@" + p.getName() + " you died m8 #shrekt");
+                int msg = p.getRand().nextInt(deathMsgs.length + 1);
+                TwitterW.tweet(deathMsgs[msg], p.getName());
             } catch(TwitterException e) {
                 e.printStackTrace();
             }
