@@ -171,7 +171,7 @@ public class Board extends JPanel implements ActionListener {
             }
         });
         int i = 0;
-        for(; i < size; i++) leaderboard[i] = p;
+        for(; i < size; i++) leaderboard[i] = players.get(i);
         return leaderboard;
     }
    
