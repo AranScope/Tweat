@@ -33,9 +33,10 @@ public class Board extends JPanel implements ActionListener {
 	public static int MAX_WIDTH = 1400;
 	public static int MAX_HEIGHT = 800;
 	public static final int DELAY = 1;
+	public static float scale;
 	
 	public static ArrayList<Profile> players;
-	private static ArrayList<Profile> toRemove;
+	private static ArrayList<Profile> toRevive;
 	private static ArrayList<User> followers;
     
     public Board() {
@@ -84,10 +85,11 @@ public class Board extends JPanel implements ActionListener {
         	}
         	
         	if(players.size() > 0) players.add(profile);
+        	scale = (float) (15.0/players.size());
         }     
        
         
-        toRemove = new ArrayList<>();
+        toRevive = new ArrayList<>();
         try {
             TwitterW.onTweet(new StatusListener() {
             	String pattern = "@(\\w+)";
@@ -174,19 +176,17 @@ public class Board extends JPanel implements ActionListener {
     	for (Profile p: players) {
     		if (p.isAlive()) p.draw(g2);
     		else {
-    			toRemove.add(p);
+    			toRevive.add(p);
     		}
     	}
-    	for (Profile p: toRemove) {
+    	for (Profile p: toRevive) {
     		players.remove(p);
-    		System.out.println("Removing");
+    		System.out.println("Reviving");
+    		players.add(p);
+    		
     	}
-    	toRemove = new ArrayList<>();
+    	toRevive = new ArrayList<>();
     }
-    
-    private void paintMenu(Graphics g) {
-    }
-    
     
     
     @Override

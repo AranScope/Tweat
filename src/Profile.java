@@ -49,12 +49,13 @@ public class Profile {
 				alive = false;
 			}
 			if (size < 1) {
-				size = 1;
+				setSize(1);
 			}
 		}
 		
 		public void decay() {
-			this.size -= (float) (Math.log(size)/25);
+			float tempSize = size -(float) (Math.log(size)/20);
+			setSize(size);
 		}
 		
 		private void move() {
@@ -81,7 +82,7 @@ public class Profile {
 			for (Profile p: Board.players) {
 				if (p.getSize() < size && p.getSize() > 0) {
 					if (pos.getDistanceTo(p.getVector()) < radius) {
-						this.size += 4*Math.log(p.getSize()+1)/(size);
+						setSize((float) (size+ 4*Math.log(p.getSize()+1)/(size)));
 						p.setSize(-1);						
 					}
 				}
@@ -128,7 +129,7 @@ public class Profile {
 		}
 		
 		private void calcRadius() {
-			this.radius = (float) (40*size*Math.log(size)/6+50)/2;
+			this.radius = (float) (Board.scale*40*size*Math.log(size)/6+50)/2;
 		}
 		
 		public float getRadius() {
@@ -141,6 +142,7 @@ public class Profile {
 		
 		public void setSize(float size) {
 			this.size = size;
+			this.vel = 0.5F/size;
 		}
 		public boolean isAlive() {
 			return alive;
