@@ -55,7 +55,7 @@ public class Profile {
 		
 		public void decay() {
 			float tempSize = size -(float) (Math.log(size)/20);
-			setSize(size);
+			setSize(tempSize);
 		}
 		
 		private void move() {
@@ -150,5 +150,9 @@ public class Profile {
 		
 		public String getName() {
 			return name;
+		}
+		
+		public User getUser() {
+			return user;
 		}
 }

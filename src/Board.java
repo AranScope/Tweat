@@ -204,7 +204,7 @@ public class Board extends JPanel implements ActionListener {
             } catch(TwitterException e) {
                 e.printStackTrace();
             }
-    		players.add(p);
+    		players.add(new Profile(p.getUser()));
     		
     	}
     	toRevive = new ArrayList<>();
