@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +63,7 @@ public class Board extends JPanel implements ActionListener {
     private void initGame() {
     	followers = new ArrayList<>();
     	try{
-    		followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));
-    		
+    		followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));  		
         }catch(Exception e){}
     	timer = new Timer(DELAY, this);
          
@@ -99,7 +97,6 @@ public class Board extends JPanel implements ActionListener {
             	
                 @Override
                 public void onStatus(Status status) {
-                    System.out.println(status.getUser().getScreenName() + ", " + status.getText());
                     Matcher m = r.matcher(status.getText());
                     String userName = "";
                     
@@ -107,16 +104,13 @@ public class Board extends JPanel implements ActionListener {
             	    	userName = m.group(1).toLowerCase();
             	    }
                     
-                    System.out.println(userName);
                     top:for (Profile p: players) {
                     	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
-                    		System.out.println("we found you: " + p.getName());
                     		p.setTweet(status.getText());
                     		p.setSize(p.getSize()+4/p.getSize());
                     		for (Profile q: players) {
                     			if (q.getName().equalsIgnoreCase("@"+userName)) {
                     				p.newTarget(q);
-                    				System.out.println("TEST "+q.getName());
                     				break top;
                     			}
                     		}
@@ -152,7 +146,6 @@ public class Board extends JPanel implements ActionListener {
     		int i = 0;
             User[] us = new User[followers.size()];
             for(User user: followers){
-                System.out.println(user.getScreenName());
                 us[i++] = user;
             }
             TwitterW.listen(us);
@@ -199,7 +192,6 @@ public class Board extends JPanel implements ActionListener {
     	}
     	for (Profile p: toRevive) {
     		players.remove(p);
-    		System.out.println("Reviving");
     		try {
                 TwitterW.tweet("@" + p.getName() + " you died m8 #shrekt");
             } catch(TwitterException e) {

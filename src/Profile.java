@@ -19,8 +19,6 @@ public class Profile {
 		private String name;
 		private float radius;
 		private Random myRandom;
-		private int startScore;
-		private int endScore;
 		private User user;
 		private BufferedImage image;
 		private String tweet = "";
@@ -42,12 +40,10 @@ public class Profile {
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 
-
 			pos.setX(pos.getX()+radius);
 			pos.setY(pos.getY()+radius);
 			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			myRandom = new Random();
-			startScore = (int)size*200;
 
 		}
 		
