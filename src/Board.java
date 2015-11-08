@@ -30,8 +30,8 @@ public class Board extends JPanel implements ActionListener {
 	private Timer timer;
 	public static int B_WIDTH = 1400;
 	public static int B_HEIGHT = 800;
-	public static final int MAX_WIDTH = 1400;
-	public static final int MAX_HEIGHT = 800;
+	public static int MAX_WIDTH = 1400;
+	public static int MAX_HEIGHT = 800;
 	public static final int DELAY = 2;
 	
 	public static ArrayList<Profile> players;
@@ -41,6 +41,10 @@ public class Board extends JPanel implements ActionListener {
     public Board() {
     	
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	B_WIDTH = (int)screenSize.getWidth();
+    	B_HEIGHT = (int)screenSize.getHeight();
+    	MAX_WIDTH = B_WIDTH;
+    	MAX_HEIGHT = B_HEIGHT;
     	initGame();
         addKeyListener(new TAdapter());
         setBackground(Color.decode("0X55ACED"));

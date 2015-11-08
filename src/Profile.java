@@ -60,16 +60,6 @@ public class Profile {
 		}
 		
 		private void move() {
-			Vector2 temp = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
-			/*if (pos.add(temp).getX() < (0+radius) || pos.add(temp).getX() > (Board.MAX_WIDTH -radius)) {
-				targetVec.setX(-targetVec.getX());
-				System.out.println(pos);
-			}
-			if (pos.add(temp).getY() < (0+radius) || pos.add(temp).getY() > (Board.MAX_HEIGHT -radius)) {
-				targetVec.setY(-targetVec.getY());
-				System.out.println(pos);
-
-			}*/
 			
 			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
 			targetVec = targetVec.add(pos.vectorTowards(targetVec).normalise().mult(vel));
@@ -120,13 +110,17 @@ public class Profile {
 		}
 
 		public void draw(Graphics2D g) {
+			int x = (int)(pos.getX()-radius);
+			int y = (int)(pos.getY()-radius);
+			int paintSize = (int)(radius*2);
 			
-			g.setClip(new Ellipse2D.Double((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2)));
+			
+			g.setClip(new Ellipse2D.Double(x, y,paintSize, paintSize));
 			g.setColor(Color.white);
-			g.fillOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
-			g.drawImage(image, (int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2), null);
+			g.fillOval(x, y,paintSize, paintSize);
+			g.drawImage(image, x, y,paintSize, paintSize, null);
 			g.setColor(Color.black);
-			g.drawOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
+			g.drawOval(x, y,paintSize, paintSize);
 			Font small = new Font("Helvetica", Font.BOLD, 14);
 			g.setFont(small);
 			FontMetrics metr;
