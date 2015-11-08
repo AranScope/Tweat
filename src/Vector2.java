@@ -29,8 +29,10 @@ public class Vector2 {
 
     public Vector2 normalise(){
         float mag = (float)Math.sqrt(x*x + y*y);
-        this.x /= mag;
-        this.y /= mag;
+        if(mag!=0) {
+            this.x /= mag;
+            this.y /= mag;
+        }
         return this;
     }
     

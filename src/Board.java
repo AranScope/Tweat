@@ -3,6 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.AttributedString;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -29,6 +33,8 @@ public class Board extends JPanel implements ActionListener {
 	public static int MAX_HEIGHT = 800;
 	public static final int DELAY = 1;
 	public static float scale;
+
+    private BufferedImage vignette;
 
     private Profile[] leaderBoard;
     private ArrayList<Status> tweets = new ArrayList<>();
@@ -52,6 +58,10 @@ public class Board extends JPanel implements ActionListener {
     }
     
     private void initGame() {
+        try {
+            vignette = ImageIO.read(new File("res/vignette.png"));
+        }catch(IOException ex){ex.printStackTrace();}
+
     	followers = new ArrayList<>();
     	try{
     		followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));  		
@@ -88,7 +98,7 @@ public class Board extends JPanel implements ActionListener {
             	
                 @Override
                 public void onStatus(Status status) {
-                    if(tweets.size() > 5){
+                    if(tweets.size() > 4){
                         tweets.remove(0);
                     }
 
@@ -181,6 +191,10 @@ public class Board extends JPanel implements ActionListener {
     	Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        if(vignette != null){
+            g2.drawImage(vignette, 0, 0, getWidth(), getHeight(), null);
+        }
+
     	for (Profile p: players) {
             p.draw(g2);
     	}
@@ -220,10 +234,11 @@ public class Board extends JPanel implements ActionListener {
         int width = 200;
         int margin = 5;
 
-        g.setFont(new Font("Seruf", Font.PLAIN, 15));
-        g.setColor(Color.white);
-        g.drawString("Twitter Feed", 10 + xOffset, yOffset - 10);
-
+        if(tweets.size() > 0) {
+            g.setFont(new Font("Seruf", Font.PLAIN, 15));
+            g.setColor(Color.white);
+            g.drawString("Twitter Feed", 10 + xOffset, yOffset - 10);
+        }
 
         int posCount = 0;
 
@@ -259,11 +274,11 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        leaderBoard = getLeaderboard();
+
     	for (Profile p: players) {
     		p.update();
     	}
     	repaint();
-
-        leaderBoard = getLeaderboard();
     }
 }

@@ -50,7 +50,7 @@ public class Profile {
 			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
 			name = "@"+user.getScreenName();
-			vel = 1.0f/size;
+			vel = 1.25f/size;
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 
@@ -65,6 +65,7 @@ public class Profile {
 		return myRandom;
 	}
 
+
 		public void update() {
 			if(startTime != -1) {
 				if (System.currentTimeMillis() - startTime > 5000) {
@@ -72,6 +73,8 @@ public class Profile {
 					startTime = -1;
 				}
 			}
+
+//			if(size > 10)
 
 			calcRadius();
 			move();
@@ -158,7 +161,7 @@ public class Profile {
 			g.setFont(new Font("Seruf", Font.PLAIN, 20));
 			FontMetrics metr;
 			metr = g.getFontMetrics();
-			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() + radius + metr.getHeight() + 8));
+			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() + radius + metr.getHeight() + 4));
 
 			if(!tweet.equals("")) {
 				g.setColor(Color.white);
@@ -198,7 +201,7 @@ public class Profile {
 		
 		public void setSize(float size) {
 			this.size = size;
-			this.vel = 1.0F/size;
+			this.vel = 1.25F/size;
 		}
 		
 		public String getName() {

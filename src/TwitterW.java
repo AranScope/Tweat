@@ -3,6 +3,7 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.imageio.ImageIO;
+import javax.xml.ws.Response;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -13,7 +14,6 @@ public class TwitterW {
     private static twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
     private static TwitterStream stream;
     private static FilterQuery listenQuery = new FilterQuery();
-    private static ArrayList<User> followers = new ArrayList<>();
     private static User gameUser;
     private static boolean listenerAdded;
 
@@ -119,11 +119,18 @@ public class TwitterW {
      * @throws TwitterException
      */
     public static ArrayList<User> getFollowers(User user) throws TwitterException{
-        PagableResponseList<User> followers =  wrapper.getFollowersList(user.getId(), -1);
-        ArrayList<User> followersArrayList = new ArrayList<>(followers.size());
-        for(User follower: followers){
-            followersArrayList.add(follower);
-        }
+
+        ArrayList<User> followersArrayList = new ArrayList<>(getFollowerCount(gameUser));
+
+        long cursor = -1L;
+        IDs ids;
+        do {
+            ids = wrapper.getFollowersIDs(cursor);
+            for(long id : ids.getIDs()) {
+                User u = getUser(id);
+                followersArrayList.add(u);
+            }
+        }while((cursor = ids.getNextCursor()) != 0);
 
         return followersArrayList;
     }
@@ -137,7 +144,10 @@ public class TwitterW {
      * @return
      */
     public static float getSize(User user) {
-        return (float)Math.log(1 + getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1)));
+        float size =  (float)Math.log(1 + getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1)));
+        if(size < 1) return 1;
+
+        return size;
     }
 
     /**
@@ -147,6 +157,11 @@ public class TwitterW {
      */
     public static User getUser(String handle) throws TwitterException {
         ResponseList<User> response = wrapper.lookupUsers(handle);
+        return response.size() == 0 ? null : response.get(0);
+    }
+
+    public static User getUser(long id) throws TwitterException {
+        ResponseList<User> response = wrapper.lookupUsers(id);
         return response.size() == 0 ? null : response.get(0);
     }
 
