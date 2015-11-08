@@ -111,6 +111,7 @@ public class Board extends JPanel implements ActionListener {
                     top:for (Profile p: players) {
                     	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
                     		System.out.println("we found you: " + p.getName());
+                    		p.setTweet(status.getText());
                     		p.setSize(p.getSize()+4/p.getSize());
                     		for (Profile q: players) {
                     			if (q.getName().equalsIgnoreCase("@"+userName)) {

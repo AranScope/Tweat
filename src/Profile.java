@@ -19,6 +19,7 @@ public class Profile {
 		private int endScore;
 		private User user;
 		private BufferedImage image;
+		private String tweet = "";
 		
 		public Profile(User user) {
 			this.user = user;
@@ -154,5 +155,9 @@ public class Profile {
 		
 		public User getUser() {
 			return user;
+		}
+		
+		public void setTweet(String tweet) {
+			this.tweet = tweet;
 		}
 }
