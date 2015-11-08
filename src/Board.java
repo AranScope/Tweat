@@ -1,13 +1,9 @@
 
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +29,8 @@ public class Board extends JPanel implements ActionListener {
 	public static int MAX_HEIGHT = 800;
 	public static final int DELAY = 1;
 	public static float scale;
+
+    private Profile[] leaderBoard;
 
     public String[] deathMsgs = {
             "You got #rekt by %s! #TwEAT",
@@ -90,6 +88,8 @@ public class Board extends JPanel implements ActionListener {
         	
         	if(players.size() > 0) players.add(profile);
         	scale = (float) (15.0/players.size());
+
+            leaderBoard = getLeaderboard();
         }     
        
         
@@ -162,13 +162,14 @@ public class Board extends JPanel implements ActionListener {
 
     public Profile[] getLeaderboard() {
         int size = Math.min(5, players.size());
+
         Profile[] leaderboard = new Profile[size];
         Collections.sort(players, new Comparator<Profile>() {
             @Override
             public int compare(Profile o1, Profile o2) {
                 boolean less = o1.getSize() < o2.getSize();
                 boolean eq = o1.getSize() == o2.getSize();
-                return less ? -1 : (eq ? 0 : 1);
+                return less ? 1 : (eq ? 0 : -1);
             }
         });
         int i = 0;
@@ -206,6 +207,27 @@ public class Board extends JPanel implements ActionListener {
     		
     	}
     	toRevive.clear();
+
+        paintLeaderboard(g2);
+    }
+
+    private void paintLeaderboard(Graphics2D g){
+        int xOffset = getWidth() - 210;
+        int yOffset = 10;
+        int height = 40;
+        int width = 200;
+        int margin = 5;
+
+        g.setFont(new Font("Seruf", Font.PLAIN, 15));
+
+        for(int count = 0; count < leaderBoard.length; count++){
+            g.setColor(new Color(255, 255, 255, 200));
+            g.fillRoundRect(xOffset, yOffset + (count * (height + margin)) , width, height, 15, 15);
+
+            g.setColor(Color.decode("0x4099FF"));
+            g.drawString(leaderBoard[count].getName(), 10 + xOffset, 25 + yOffset + (count * (height + margin)));
+            g.drawString("" + (int)leaderBoard[count].getSize(), 10 + xOffset + width - 55, 25 + yOffset + (count * (height + margin)));
+        }
     }
     
     
