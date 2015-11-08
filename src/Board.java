@@ -32,6 +32,8 @@ public class Board extends JPanel implements ActionListener {
 
     private Profile[] leaderBoard;
 
+    private DecimalFormat df = new DecimalFormat("#0.00");
+
     public String[] deathMsgs = {
             "%s got #rekt! #TwEAT",
             "Looks like %s got violated #TwEAT",
@@ -43,7 +45,6 @@ public class Board extends JPanel implements ActionListener {
     };
 	
 	public static ArrayList<Profile> players;
-	private static ArrayList<Profile> toRevive;
 	private static ArrayList<User> followers;
     
     public Board() {
@@ -59,6 +60,10 @@ public class Board extends JPanel implements ActionListener {
         setDoubleBuffered(false);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));  
         
+    }
+
+    public void resetLocation(Profile player){
+        player.setVector(Vector2.getRandomVector((MAX_WIDTH-2*player.getRadius()), (MAX_HEIGHT-2*player.getRadius())));
     }
     
     private void initGame() {
@@ -91,8 +96,7 @@ public class Board extends JPanel implements ActionListener {
             leaderBoard = getLeaderboard();
         }     
        
-        
-        toRevive = new ArrayList<>();
+
         try {
             TwitterW.onTweet(new StatusListener() {
             	String pattern = "@(\\w+)";
@@ -181,8 +185,7 @@ public class Board extends JPanel implements ActionListener {
         super.paintComponent(g);
         paintGame(g);
     }
-   
-    
+
     private void paintGame(Graphics g) {
     	Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -191,21 +194,15 @@ public class Board extends JPanel implements ActionListener {
     	for (Profile p: players) {
     		if (p.isAlive()) p.draw(g2);
     		else {
-    			toRevive.add(p);
+    			resetLocation(p);
+                try {
+                    int msg = p.getRand().nextInt(deathMsgs.length);
+                    TwitterW.tweet(String.format(deathMsgs[msg], p.getName()));
+                } catch(TwitterException e) {
+                    e.printStackTrace();
+                }
     		}
     	}
-    	for (Profile p: toRevive) {
-    		players.remove(p);
-    		try {
-                int msg = p.getRand().nextInt(deathMsgs.length + 1);
-                TwitterW.tweet(String.format(deathMsgs[msg], p.getName()));
-            } catch(TwitterException e) {
-                e.printStackTrace();
-            }
-    		players.add(new Profile(p.getUser()));
-    		
-    	}
-    	toRevive.clear();
 
         paintLeaderboard(g2);
     }
@@ -219,13 +216,15 @@ public class Board extends JPanel implements ActionListener {
 
         g.setFont(new Font("Seruf", Font.PLAIN, 15));
 
+
         for(int count = 0; count < leaderBoard.length; count++){
             g.setColor(new Color(255, 255, 255, 200));
             g.fillRoundRect(xOffset, yOffset + (count * (height + margin)) , width, height, 15, 15);
 
             g.setColor(Color.decode("0x4099FF"));
             g.drawString(leaderBoard[count].getName(), 10 + xOffset, 25 + yOffset + (count * (height + margin)));
-            g.drawString("" + (int)leaderBoard[count].getSize(), 10 + xOffset + width - 55, 25 + yOffset + (count * (height + margin)));
+
+            g.drawString("" + df.format(leaderBoard[count].getSize()), 10 + xOffset + width - 55, 25 + yOffset + (count * (height + margin)));
         }
     }
     
