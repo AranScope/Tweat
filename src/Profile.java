@@ -14,7 +14,7 @@ public class Profile {
 		private boolean alive;
 		private String name;
 		private float radius;
-		private Random myRandom;
+		public Random myRandom;
 		private int startScore;
 		private int endScore;
 		private User user;

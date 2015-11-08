@@ -40,6 +40,13 @@ public class Board extends JPanel implements ActionListener {
 	public static ArrayList<Profile> players;
 	private static ArrayList<Profile> toRevive;
 	private static ArrayList<User> followers;
+
+    public static final String[] deathMsgs = {"You got #rekt by @%s #TwEAT",
+            "Looks like @%s violated you #TwEAT",
+            "You've been #dispatched by @%s! #TwEAT",
+            "You've drowned in @%s #TwEAT",
+            "Looks like @%s was hungry #TwEAT",
+            "You are now one with @%s #TwEAT"};
     
     public Board() {
     	
@@ -200,7 +207,8 @@ public class Board extends JPanel implements ActionListener {
     		players.remove(p);
     		System.out.println("Reviving");
     		try {
-                TwitterW.tweet("@" + p.getName() + " you died m8 #shrekt");
+                int msg = p.myRandom.nextInt(deathMsgs.length + 1);
+                TwitterW.tweet(String.format(deathMsgs[msg], p.getName()));
             } catch(TwitterException e) {
                 e.printStackTrace();
             }
