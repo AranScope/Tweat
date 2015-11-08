@@ -46,7 +46,11 @@ public class Profile {
 			myRandom = new Random();
 
 		}
-		
+
+	public Random getRand() {
+		return myRandom;
+	}
+
 		public void update() {
 			calcRadius();
 			move();
