@@ -9,27 +9,22 @@ import java.util.ArrayList;
  */
 public class AranTestClass extends JPanel{
     public static void main(String[] args){
-        JFrame frame = new JFrame("Tweat");
+        JFrame frame = new JFrame("Twat");
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ArrayList<User> followers = null;
 
         try{
-            ArrayList<User> followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));
+            followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));
 
-            for(User user: followers){
-                System.out.println(user.getScreenName());
-            }
+           
         }catch(Exception e){}
 
         try {
-
-            User user = TwitterW.getUser("aranscope");
-            User user1 = TwitterW.getUser("vivadaylight3");
-
             TwitterW.onTweet(new StatusListener() {
                 @Override
                 public void onStatus(Status status) {
-                    System.out.println(status.getUser().getScreenName() + ", " + status.getText());
+                    System.out.println(status);
                     if(status.getText().toLowerCase().contains("@tweatgame")){
 
                     }
@@ -62,10 +57,14 @@ public class AranTestClass extends JPanel{
                 }
             });
 
-            TwitterW.listen(user);
-            TwitterW.listen(user1);
-
             //frame.add(new AranTestView(TwitterW.getProfileImage(TwitterW.getUser("aranscope"))));
+            int i = 0;
+            User[] us = new User[followers.size()];
+            for(User user: followers){
+                System.out.println(user.getScreenName());
+                us[i++] = user;
+            }
+            TwitterW.listen(us);
 
 
 

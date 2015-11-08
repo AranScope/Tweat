@@ -3,8 +3,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.Random;
-
-//import twitter4j.*;
+import twitter4j.User;
 
 public class Profile {
 	
@@ -19,20 +18,21 @@ public class Profile {
 		private Random myRandom;
 		private int startScore;
 		private int endScore;
+		private User user;
 		
-		public Profile(float size, String name) {
-			this.size =size;
+		public Profile(User user) {
+			this.user = user;
+			size = TwitterW.getSize(user);
+			name = "@"+user.getScreenName();
 			alive = true;
-			vel = 1F/size;
+			vel = 0.5F/size;
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 			pos.setX(pos.getX()+radius);
 			pos.setY(pos.getY()+radius);
 			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			myRandom = new Random();
-			this.name = name;
 			startScore = (int)size*200;
-			System.out.println(pos);
 						
 		}
 		
@@ -64,18 +64,32 @@ public class Profile {
 				System.out.println(pos);
 
 			}*/
+			
 			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
 			targetVec = targetVec.add(pos.vectorTowards(targetVec).normalise().mult(vel));
+			
+			//Arans sketchy code
+			if(pos.getX() > Board.MAX_WIDTH - radius && targetVec.getX() > 0){
+				targetVec = targetVec.mult(new Vector2(-1, 1));
+			}
+			if(pos.getX() < 0 + radius && targetVec.getX() < 0){
+				targetVec = targetVec.mult(new Vector2(-1, 1));
+			}
+			if(pos.getY() > Board.MAX_HEIGHT - radius && targetVec.getY() > 0){
+				targetVec = targetVec.mult(new Vector2(1, -1));
+			}
+			if(pos.getY() < 0 + radius && targetVec.getY() < 0){
+				targetVec = targetVec.mult(new Vector2(1, -1));
+			}
+			
 		}
 		
 		private void checkCollision() {
 			for (Profile p: Board.players) {
 				if (p.getSize() < size && p.getSize() > 0) {
-					if (pos.getDistanceTo(p.getVector()) < radius/2) {
+					if (pos.getDistanceTo(p.getVector()) < radius) {
 						this.size += 4*Math.log(p.getSize()+1)/(size);
-						p.setSize(-1);
-						System.out.println(size);
-						
+						p.setSize(-1);						
 					}
 				}
 			}
@@ -97,9 +111,9 @@ public class Profile {
 		
 		public void draw(Graphics g) {	
 			g.setColor(Color.white);
-			g.fillOval((int)(pos.getX()-radius/2), (int)(pos.getY()-radius/2), (int)(radius),(int)(radius));
+			g.fillOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
 			g.setColor(Color.black);
-			g.drawOval((int)(pos.getX()-radius/2), (int)(pos.getY()-radius/2), (int)(radius),(int)(radius));
+			g.drawOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
 			Font small = new Font("Helvetica", Font.BOLD, 14);
 			g.setFont(small);
 			FontMetrics metr;
@@ -110,7 +124,7 @@ public class Profile {
 		}
 		
 		private void calcRadius() {
-			this.radius = (float) (40*size*Math.log(size)/3+50)/2;
+			this.radius = (float) (40*size*Math.log(size)/6+50)/2;
 		}
 		
 		public float getRadius() {
@@ -127,4 +141,8 @@ public class Profile {
 		public boolean isAlive() {
 			return alive;
 		}	
+		
+		public String getName() {
+			return name;
+		}
 }

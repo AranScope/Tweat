@@ -10,11 +10,18 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 public class Board extends JPanel implements ActionListener {
 
@@ -27,12 +34,12 @@ public class Board extends JPanel implements ActionListener {
 	
 	public static ArrayList<Profile> players;
 	private static ArrayList<Profile> toRemove;
+	private static ArrayList<User> followers;
     
     public Board() {
+    	
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	initGame();
-    	B_WIDTH = (int)screenSize.getWidth();
-    	B_HEIGHT = (int)screenSize.getHeight()-100;
         addKeyListener(new TAdapter());
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
@@ -41,25 +48,91 @@ public class Board extends JPanel implements ActionListener {
         
     }
     
-    public void addPlayer(int size, String name) {
-    	players.add(new Profile(size, name));
+    public void addPlayer(User user) {
+    	players.add(new Profile(user));
     }
     
-    private void initGame() {	
+    private void initGame() {
+    	followers = new ArrayList<>();
+    	try{
+    		followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));
+    		
+        }catch(Exception e){}
     	timer = new Timer(DELAY, this);
         timer.start(); 
         players = new ArrayList<>();
-        addPlayer(5, "Gary");
-        addPlayer(10, "Fat Sam");
-        players.get(0).newTarget(players.get(1));
-        players.get(1).newTarget(players.get(0));
+        
+        for (User u: followers) {
+        	players.add(new Profile(u));
+        }
+        
         toRemove = new ArrayList<>();
-        /*try {
-			TwitterW.tweet("@PeranTruscott #gamestarting");
-		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+        try {
+            TwitterW.onTweet(new StatusListener() {
+            	String pattern = "@(\\w+)";
+            	Pattern r = Pattern.compile(pattern);
+            	
+                @Override
+                public void onStatus(Status status) {
+                    System.out.println(status.getUser().getScreenName() + ", " + status.getText());
+                    Matcher m = r.matcher(status.getText());
+                    String userName = "";
+                    
+                    if (m.find( )) {
+            	    	userName = m.group(1).toLowerCase();
+            	    }
+                    
+                    System.out.println(userName);
+                    top:for (Profile p: players) {
+                    	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
+                    		System.out.println("we found you: " + p.getName());
+                    		p.setSize(2/p.getSize());
+                    		for (Profile q: players) {
+                    			if (q.getName().equalsIgnoreCase("@"+userName)) {
+                    				p.newTarget(q);
+                    				System.out.println("TEST "+q.getName());
+                    				break top;
+                    			}
+                    		}
+                    	}
+                    }
+                }
+
+                @Override
+                public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+
+                }
+
+                @Override
+                public void onTrackLimitationNotice(int i) {
+
+                }
+
+                @Override
+                public void onScrubGeo(long l, long l1) {
+
+                }
+
+                @Override
+                public void onStallWarning(StallWarning stallWarning) {
+
+                }
+
+                @Override
+                public void onException(Exception e) {
+
+                }
+            });
+    		int i = 0;
+            User[] us = new User[followers.size()];
+            for(User user: followers){
+                System.out.println(user.getScreenName());
+                us[i++] = user;
+            }
+            TwitterW.listen(us);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
     }
 
    
@@ -81,6 +154,7 @@ public class Board extends JPanel implements ActionListener {
     		players.remove(p);
     		System.out.println("Removing");
     	}
+    	toRemove = new ArrayList<>();
     }
     
     private void paintMenu(Graphics g) {

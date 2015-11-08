@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class TwitterW {
 
@@ -32,7 +31,7 @@ public class TwitterW {
         }
     }
 
-    public static void startFollowerRefresh() {
+  /*  public static void startFollowerRefresh() {
         Thread followerThread = new Thread(){
             @Override
             public void run(){
@@ -49,7 +48,7 @@ public class TwitterW {
             }
         };
         followerThread.start();
-    }
+    } */
 
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
