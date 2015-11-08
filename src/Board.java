@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -158,6 +159,20 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
+    public Profile[] getLeaderboard() {
+        Profile[] leaderboard = new Profile[players.size()];
+        players.sort(new Comparator<Profile>() {
+            @Override
+            public int compare(Profile o1, Profile o2) {
+                boolean less = o1.getSize() < o2.getSize();
+                boolean eq = o1.getSize() == o2.getSize();
+                return less ? -1 : (eq ? 0 : 1);
+            }
+        });
+        int i = 0;
+        for(Profile p : players) leaderboard[i++] = p;
+        return leaderboard;
+    }
    
     @Override
     public void paintComponent(Graphics g) {
