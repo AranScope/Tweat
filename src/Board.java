@@ -33,14 +33,13 @@ public class Board extends JPanel implements ActionListener {
     private Profile[] leaderBoard;
 
     public String[] deathMsgs = {
-            "You got #rekt by %s! #TwEAT",
-            "Looks like %s violated you #TwEAT",
-            "You've been #dispatched by %s! #TwEAT",
-            "You've been drowned in %s #TwEAT",
-            "Looks like %s was hungry #TwEAT",
-            "You are now one with %s #TwEAT",
-            "You got tyrannosaurus #rekt by %s #TwEAT",
-            "%s went cannibal on you #TwEAT"
+            "%s got #rekt! #TwEAT",
+            "Looks like %s got violated #TwEAT",
+            "%s has been #dispatched! #TwEAT",
+            "%s looks like someone was hungry #TwEAT",
+            "%s is now sleeping with the fishes #TwEAT",
+            "%s got tyrannosaurus #rekt #TwEAT",
+            "Someone went cannibal on %s #TwEAT"
     };
 	
 	public static ArrayList<Profile> players;
