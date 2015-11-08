@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 import twitter4j.User;
 
@@ -19,6 +20,7 @@ public class Profile {
 		private int startScore;
 		private int endScore;
 		private User user;
+		private BufferedImage image;
 		
 		public Profile(User user) {
 			this.user = user;
@@ -93,6 +95,11 @@ public class Profile {
 					}
 				}
 			}
+		}
+		
+		public boolean intersects(Profile check){
+			if(pos.getDistanceTo(check.getVector()) < radius + check.getRadius() + 20) return true;
+			else return false;
 		}
 		
 		public void newTarget(Profile target) {

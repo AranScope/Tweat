@@ -59,12 +59,27 @@ public class Board extends JPanel implements ActionListener {
     		
         }catch(Exception e){}
     	timer = new Timer(DELAY, this);
-        timer.start(); 
+         
         players = new ArrayList<>();
         
         for (User u: followers) {
-        	players.add(new Profile(u));
-        }
+        	Profile profile = new Profile(u);
+        	boolean intersects = true;
+        	
+        	if(players.size()== 0) players.add(profile);
+        	else while(intersects){
+        		profile.setVector(Vector2.getRandomVector((MAX_WIDTH-2*profile.getRadius()), (MAX_HEIGHT-2*profile.getRadius())));
+        		for(int x = 0; x < players.size(); x++){
+        			if(players.get(x) != profile){
+        				intersects = profile.intersects(players.get(x));
+        				if(intersects) break;
+        			}
+        		}
+        	}
+        	
+        	if(players.size() > 0) players.add(profile);
+        }     
+       
         
         toRemove = new ArrayList<>();
         try {
@@ -86,7 +101,7 @@ public class Board extends JPanel implements ActionListener {
                     top:for (Profile p: players) {
                     	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
                     		System.out.println("we found you: " + p.getName());
-                    		p.setSize(2/p.getSize());
+                    		p.setSize(p.getSize()+4/p.getSize());
                     		for (Profile q: players) {
                     			if (q.getName().equalsIgnoreCase("@"+userName)) {
                     				p.newTarget(q);
@@ -133,6 +148,8 @@ public class Board extends JPanel implements ActionListener {
         } catch (Exception e) {
         	e.printStackTrace();
         }
+        
+        timer.start();
     }
 
    
@@ -144,6 +161,7 @@ public class Board extends JPanel implements ActionListener {
    
     
     private void paintGame(Graphics g) {
+    	
     	for (Profile p: players) {
     		if (p.isAlive()) p.draw(g);
     		else {
