@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 import twitter4j.User;
@@ -24,6 +27,7 @@ public class Profile {
 		
 		public Profile(User user) {
 			this.user = user;
+			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
 			name = "@"+user.getScreenName();
 			alive = true;
@@ -114,11 +118,13 @@ public class Profile {
 		public void setVector(Vector2 newPos) {
 			this.pos = newPos;
 		}
-		
-		
-		public void draw(Graphics g) {	
+
+		public void draw(Graphics2D g) {
+			
+			g.setClip(new Ellipse2D.Double((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2)));
 			g.setColor(Color.white);
 			g.fillOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
+			g.drawImage(image, (int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2), null);
 			g.setColor(Color.black);
 			g.drawOval((int)(pos.getX()-radius), (int)(pos.getY()-radius), (int)(radius*2),(int)(radius*2));
 			Font small = new Font("Helvetica", Font.BOLD, 14);
