@@ -160,7 +160,7 @@ public class Board extends JPanel implements ActionListener {
         } catch (Exception e) {
         	e.printStackTrace();
         }
-        
+
         timer.start();
     }
 
