@@ -123,7 +123,7 @@ public class Profile {
 			g.setFont(new Font("Seruf", Font.PLAIN, 20));
 			FontMetrics metr;
 			metr = g.getFontMetrics();
-			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() - radius - metr.getHeight() + 8));
+			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() + radius + metr.getHeight() + 8));
 
 		}
 		
