@@ -160,7 +160,8 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public Profile[] getLeaderboard() {
-        Profile[] leaderboard = new Profile[players.size()];
+        int size = Math.min(5, players.size());
+        Profile[] leaderboard = new Profile[size];
         players.sort(new Comparator<Profile>() {
             @Override
             public int compare(Profile o1, Profile o2) {
@@ -170,7 +171,7 @@ public class Board extends JPanel implements ActionListener {
             }
         });
         int i = 0;
-        for(Profile p : players) leaderboard[i++] = p;
+        for(; i < size; i++) leaderboard[i] = p;
         return leaderboard;
     }
    
