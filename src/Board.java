@@ -185,13 +185,18 @@ public class Board extends JPanel implements ActionListener {
     private void paintGame(Graphics g) {
     	Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
+
     	for (int i  = 0; i < players.size(); i++) {
             Profile p = players.get(i);
     		if (p.isAlive()) p.draw(g2);
     		else {
     			players.remove(i);
                 System.out.println("Removing");
+                try {
+                    TwitterW.tweet("@" + p.getName() + " you died m8 #shrekt");
+                } catch(TwitterException e) {
+                    e.printStackTrace();
+                }
                 i--;
     		}
     	}
@@ -199,8 +204,6 @@ public class Board extends JPanel implements ActionListener {
     
     private void paintMenu(Graphics g) {
     }
-    
-    
     
     @Override
     public void actionPerformed(ActionEvent e) {
