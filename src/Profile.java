@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Timer;
 
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -24,6 +25,8 @@ public class Profile {
 		private BufferedImage twitterlogo;
 		public boolean isFollowed; //sam's variable.
 
+		private long startTime = 0;
+
 	public String[] deathMsgs = {
 			"%s got #rekt! #TwEAT",
 			"Looks like %s got violated #TwEAT",
@@ -43,7 +46,7 @@ public class Profile {
 			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
 			name = "@"+user.getScreenName();
-			vel = 2.0f/size;
+			vel = 1.0f/size;
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 
@@ -59,17 +62,28 @@ public class Profile {
 	}
 
 		public void update() {
+			if(startTime != -1) {
+				if (System.currentTimeMillis() - startTime > 5000) {
+					tweet = "";
+					startTime = -1;
+				}
+			}
+			
 			calcRadius();
 			move();
 			checkCollision();
-			if (myRandom.nextInt(10000) > 9950) decay();
+			//if (myRandom.nextInt(10000) > 9950) decay();
+			decay();
 			if (size < 1) {
 				setSize(1);
 			}
 		}
 		
 		public void decay() {
-			float tempSize = size -(float) (Math.log(size)/10);
+			//float tempSize = size -(float) (Math.log(size)/10);
+			//setSize(tempSize);
+
+			float tempSize = size - (float) (Math.log(size)/3000);
 			setSize(tempSize);
 		}
 		
@@ -180,7 +194,7 @@ public class Profile {
 		
 		public void setSize(float size) {
 			this.size = size;
-			this.vel = 2.0F/size;
+			this.vel = 1.0F/size;
 		}
 		
 		public String getName() {
@@ -194,6 +208,7 @@ public class Profile {
 		public void setTweet(String tweet) {
 			if(tweet.length() > 28) tweet = tweet.substring(0, 28) + "...";
 			this.tweet = tweet;
+			startTime = System.currentTimeMillis();
 		}
 
 		public void reset() {
