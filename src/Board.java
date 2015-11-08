@@ -1,5 +1,3 @@
-
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +19,6 @@ import twitter4j.TwitterException;
 import twitter4j.User;
 
 public class Board extends JPanel implements ActionListener {
-
 	private Timer timer;
 	public static int B_WIDTH = 1400;
 	public static int B_HEIGHT = 800;
@@ -33,22 +30,11 @@ public class Board extends JPanel implements ActionListener {
     private Profile[] leaderBoard;
 
     private DecimalFormat df = new DecimalFormat("#0.00");
-
-    public String[] deathMsgs = {
-            "%s got #rekt! #TwEAT",
-            "Looks like %s got violated #TwEAT",
-            "%s has been #dispatched! #TwEAT",
-            "%s looks like someone was hungry #TwEAT",
-            "%s is now sleeping with the fishes #TwEAT",
-            "%s got tyrannosaurus #rekt #TwEAT",
-            "Someone went cannibal on %s #TwEAT"
-    };
 	
 	public static ArrayList<Profile> players;
 	private static ArrayList<User> followers;
     
     public Board() {
-    	
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	B_WIDTH = (int)screenSize.getWidth();
     	B_HEIGHT = (int)screenSize.getHeight() - 50;
@@ -58,12 +44,7 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.decode("0X55ACED"));
         setFocusable(true);
         setDoubleBuffered(false);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));  
-        
-    }
-
-    public void resetLocation(Profile player){
-        player.setVector(Vector2.getRandomVector((MAX_WIDTH-2*player.getRadius()), (MAX_HEIGHT-2*player.getRadius())));
+        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
     }
     
     private void initGame() {
@@ -81,7 +62,7 @@ public class Board extends JPanel implements ActionListener {
         	
         	if(players.size()== 0) players.add(profile);
         	else while(intersects){
-        		profile.setVector(Vector2.getRandomVector((MAX_WIDTH-2*profile.getRadius()), (MAX_HEIGHT-2*profile.getRadius())));
+        		profile.setVector(Vector2.getRandomVector((MAX_WIDTH - 2 * profile.getRadius()), (MAX_HEIGHT-2*profile.getRadius())));
         		for(int x = 0; x < players.size(); x++){
         			if(players.get(x) != profile){
         				intersects = profile.intersects(players.get(x));
@@ -92,10 +73,9 @@ public class Board extends JPanel implements ActionListener {
         	
         	if(players.size() > 0) players.add(profile);
         	scale = (float) (15.0/players.size());
+        }
 
-            leaderBoard = getLeaderboard();
-        }     
-       
+        leaderBoard = getLeaderboard();
 
         try {
             TwitterW.onTweet(new StatusListener() {
@@ -189,19 +169,9 @@ public class Board extends JPanel implements ActionListener {
     private void paintGame(Graphics g) {
     	Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-    	
+
     	for (Profile p: players) {
-    		if (p.isAlive()) p.draw(g2);
-    		else {
-    			resetLocation(p);
-                try {
-                    int msg = p.getRand().nextInt(deathMsgs.length);
-                    TwitterW.tweet(String.format(deathMsgs[msg], p.getName()));
-                } catch(TwitterException e) {
-                    e.printStackTrace();
-                }
-    		}
+            p.draw(g2);
     	}
 
         paintLeaderboard(g2);
@@ -216,7 +186,6 @@ public class Board extends JPanel implements ActionListener {
 
         g.setFont(new Font("Seruf", Font.PLAIN, 15));
 
-
         for(int count = 0; count < leaderBoard.length; count++){
             g.setColor(new Color(255, 255, 255, 200));
             g.fillRoundRect(xOffset, yOffset + (count * (height + margin)) , width, height, 15, 15);
@@ -224,16 +193,17 @@ public class Board extends JPanel implements ActionListener {
             g.setColor(Color.decode("0x4099FF"));
             g.drawString(leaderBoard[count].getName(), 10 + xOffset, 25 + yOffset + (count * (height + margin)));
 
-            g.drawString("" + df.format(leaderBoard[count].getSize()), 10 + xOffset + width - 55, 25 + yOffset + (count * (height + margin)));
+            g.drawString("" + df.format(leaderBoard[count].getSize()), 10 + xOffset + width - 60, 25 + yOffset + (count * (height + margin)));
         }
     }
-    
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
     	for (Profile p: players) {
     		p.update();
     	}
     	repaint();
+
+        leaderBoard = getLeaderboard();
     }
 }

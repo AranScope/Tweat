@@ -19,7 +19,6 @@ public class AranTestView extends JPanel {
         this.setPreferredSize(new Dimension(800, 600));
 
         msg = "I'm coming for you @SamTebbs what are you going to do";
-
     }
 
     public void paintComponent(Graphics g){

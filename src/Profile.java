@@ -4,17 +4,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+
+import twitter4j.TwitterException;
 import twitter4j.User;
 
 import javax.imageio.ImageIO;
 
 public class Profile {
-	
 		private Vector2 pos;
 		private float size;
 		private float vel;
 		private Vector2 targetVec;
-		private boolean alive;
 		private String name;
 		private float radius;
 		private Random myRandom;
@@ -23,6 +23,16 @@ public class Profile {
 		private String tweet = "";
 		private BufferedImage twitterlogo;
 		public boolean isFollowed; //sam's variable.
+
+	public String[] deathMsgs = {
+			"%s got #rekt! #TwEAT",
+			"Looks like %s got violated #TwEAT",
+			"%s has been #dispatched! #TwEAT",
+			"%s looks like someone was hungry #TwEAT",
+			"%s is now sleeping with the fishes #TwEAT",
+			"%s got tyrannosaurus #rekt #TwEAT",
+			"Someone went cannibal on %s #TwEAT"
+	};
 		
 		public Profile(User user) {
 			try {
@@ -32,10 +42,8 @@ public class Profile {
 			this.user = user;
 			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
-			if(size < 1) size = 1;
 			name = "@"+user.getScreenName();
-			alive = true;
-			vel = 0.5F/size;
+			vel = 2.0f/size;
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 
@@ -46,7 +54,7 @@ public class Profile {
 
 		}
 
-	public Random getRand() {
+		public Random getRand() {
 		return myRandom;
 	}
 
@@ -54,17 +62,14 @@ public class Profile {
 			calcRadius();
 			move();
 			checkCollision();
-			if (myRandom.nextInt(10000) > 9995) decay();
-			if (size < 0) {
-				alive = false;
-			}
+			if (myRandom.nextInt(10000) > 9950) decay();
 			if (size < 1) {
 				setSize(1);
 			}
 		}
 		
 		public void decay() {
-			float tempSize = size -(float) (Math.log(size)/20);
+			float tempSize = size -(float) (Math.log(size)/10);
 			setSize(tempSize);
 		}
 		
@@ -90,10 +95,12 @@ public class Profile {
 		
 		private void checkCollision() {
 			for (Profile p: Board.players) {
-				if (p.getSize() < size && p.getSize() > 0) {
-					if (pos.getDistanceTo(p.getVector()) < radius) {
-						setSize((float) (size+ 4*Math.log(p.getSize()+1)/(size)));
-						p.setSize(-1);						
+				if(p != this) {
+					if (p.getSize() < size && p.getSize() > 0) {
+						if (pos.getDistanceTo(p.getVector()) < radius) {
+							setSize((float) (size + 4 * Math.log(p.getSize() + 1) / (size)));
+							p.reset();
+						}
 					}
 				}
 			}
@@ -173,11 +180,8 @@ public class Profile {
 		
 		public void setSize(float size) {
 			this.size = size;
-			this.vel = 0.5F/size;
+			this.vel = 2.0F/size;
 		}
-		public boolean isAlive() {
-			return alive;
-		}	
 		
 		public String getName() {
 			return name;
@@ -191,4 +195,18 @@ public class Profile {
 			if(tweet.length() > 28) tweet = tweet.substring(0, 28) + "...";
 			this.tweet = tweet;
 		}
-}
+
+		public void reset() {
+			this.setVector(Vector2.getRandomVector((Board.MAX_WIDTH - 2 * this.getRadius()), (Board.MAX_HEIGHT - 2 * this.getRadius())));
+			this.setSize(TwitterW.getSize(this.getUser()));
+			this.tweet = "";
+		}
+
+//		try {
+//			int msg = this.getRand().nextInt(deathMsgs.length);
+//			TwitterW.tweet(String.format(deathMsgs[msg], this.getName()));
+//		} catch(TwitterException e) {
+//			e.printStackTrace();
+//		}
+	}
+

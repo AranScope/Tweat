@@ -137,8 +137,7 @@ public class TwitterW {
      * @return
      */
     public static float getSize(User user) {
-        float d = getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1));
-        return d <= 0 ? 1 : (float)Math.log(d);
+        return (float)Math.log(1 + getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1)));
     }
 
     /**
