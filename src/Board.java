@@ -35,12 +35,14 @@ public class Board extends JPanel implements ActionListener {
 	public static float scale;
 
     public String[] deathMsgs = {
-            "You got #rekt by @%s! #TwEAT",
-            "Looks like @%s violated you #TwEAT",
-            "You've been #dispatched by @%s! #TwEAT",
-            "You've been drowned in @%s #TwEAT",
-            "Looks like @%s was hungry #TwEAT",
-            "You are now one with @%s #TwEAT"
+            "You got #rekt by %s! #TwEAT",
+            "Looks like %s violated you #TwEAT",
+            "You've been #dispatched by %s! #TwEAT",
+            "You've been drowned in %s #TwEAT",
+            "Looks like %s was hungry #TwEAT",
+            "You are now one with %s #TwEAT",
+            "You got tyrannosaurus #rekt by %s #TwEAT",
+            "%s went cannibal on you #TwEAT"
     };
 	
 	public static ArrayList<Profile> players;
@@ -196,7 +198,7 @@ public class Board extends JPanel implements ActionListener {
     		players.remove(p);
     		try {
                 int msg = p.getRand().nextInt(deathMsgs.length + 1);
-                TwitterW.tweet(deathMsgs[msg], p.getName());
+                TwitterW.tweet(String.format(deathMsgs[msg], p.getName()));
             } catch(TwitterException e) {
                 e.printStackTrace();
             }
