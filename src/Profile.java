@@ -1,8 +1,12 @@
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import twitter4j.User;
+
+import javax.imageio.ImageIO;
 
 public class Profile {
 	
@@ -15,13 +19,17 @@ public class Profile {
 		private String name;
 		private float radius;
 		private Random myRandom;
-		private int startScore;
-		private int endScore;
 		private User user;
 		private BufferedImage image;
 		private String tweet = "";
-
+		private BufferedImage twitterlogo;
+		public boolean isFollowed; //sam's variable.
+		
 		public Profile(User user) {
+			try {
+				twitterlogo = ImageIO.read(new File("res/twitterlogo.png"));
+			}catch(IOException ex){ex.printStackTrace();}
+
 			this.user = user;
 			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
@@ -32,12 +40,10 @@ public class Profile {
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
 
-
 			pos.setX(pos.getX()+radius);
 			pos.setY(pos.getY()+radius);
 			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			myRandom = new Random();
-			startScore = (int)size*200;
 
 		}
 
@@ -131,6 +137,28 @@ public class Profile {
 			metr = g.getFontMetrics();
 			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() + radius + metr.getHeight() + 8));
 
+			if(!tweet.equals("")) {
+				g.setColor(Color.white);
+
+				int xOffset = (int) (pos.getX() + radius);
+				int yOffset = (int) (pos.getY() - radius);
+
+				g.setFont(new Font("Seruf", Font.PLAIN, 15));
+
+				FontMetrics fm = g.getFontMetrics();
+
+				g.fillRoundRect(xOffset, yOffset, fm.stringWidth(tweet) + 20 + 32, 40, 25, 25);
+
+				int[] xpoints = {15 + xOffset, 30 + xOffset, 15 + xOffset};
+				int[] ypoints = {40 + yOffset, 40 + yOffset, 55 + yOffset};
+				g.fillPolygon(xpoints, ypoints, 3);
+
+				g.setColor(Color.decode("0x4099FF"));
+
+				g.drawString(tweet, 42 + xOffset, 25 + yOffset);
+
+				g.drawImage(twitterlogo, 12 + xOffset, 11 + yOffset, twitterlogo.getWidth() / 50, twitterlogo.getHeight() / 50, null);
+			}
 		}
 		
 		private void calcRadius() {
@@ -162,6 +190,7 @@ public class Profile {
 		}
 		
 		public void setTweet(String tweet) {
+			if(tweet.length() > 28) tweet = tweet.substring(0, 28) + "...";
 			this.tweet = tweet;
 		}
 }
