@@ -198,6 +198,14 @@ public class Board extends JPanel implements ActionListener {
 		
     	
     	for (Profile p: players) {
+            if(p.getSize() >= 15 && !p.isFollowed){
+                try {
+                    TwitterW.follow(p.getUser());
+                } catch(TwitterException e) {
+                    e.printStackTrace();
+                }
+                p.isFollowed = true;
+            }
     		if (p.isAlive()) p.draw(g2);
     		else {
     			toRevive.add(p);

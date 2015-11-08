@@ -19,6 +19,7 @@ public class Profile {
 		private int endScore;
 		private User user;
 		private BufferedImage image;
+	public boolean isFollowed;
 		
 		public Profile(User user) {
 			this.user = user;
@@ -39,6 +40,10 @@ public class Profile {
 			startScore = (int)size*200;
 
 		}
+
+	public User getUser() {
+		return user;
+	}
 		
 		public void update() {
 			calcRadius();
