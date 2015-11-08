@@ -185,19 +185,16 @@ public class Board extends JPanel implements ActionListener {
     private void paintGame(Graphics g) {
     	Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-    	
-    	for (Profile p: players) {
+        
+    	for (int i  = 0; i < players.size(); i++) {
+            Profile p = players.get(i);
     		if (p.isAlive()) p.draw(g2);
     		else {
-    			toRemove.add(p);
+    			players.remove(i);
+                System.out.println("Removing");
+                i--;
     		}
     	}
-    	for (Profile p: toRemove) {
-    		players.remove(p);
-    		System.out.println("Removing");
-    	}
-    	toRemove = new ArrayList<>();
     }
     
     private void paintMenu(Graphics g) {
