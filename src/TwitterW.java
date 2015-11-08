@@ -185,7 +185,7 @@ public class TwitterW {
         File dest;
         try {
             dest = File.createTempFile("res/tmp/" + user.getName(), ".png");
-            URL url = new URL(user.getBiggerProfileImageURL());
+            URL url = new URL(user.getOriginalProfileImageURL());
             InputStream is = url.openStream();
             OutputStream os = new FileOutputStream(dest);
 

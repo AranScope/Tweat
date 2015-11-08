@@ -1,9 +1,4 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -29,17 +24,20 @@ public class Profile {
 			this.user = user;
 			image = TwitterW.getProfileImage(user);
 			size = TwitterW.getSize(user);
+			if(size < 1) size = 1;
 			name = "@"+user.getScreenName();
 			alive = true;
 			vel = 0.5F/size;
 			calcRadius();
 			pos = Vector2.getRandomVector((Board.MAX_WIDTH-2*radius), (Board.MAX_HEIGHT-2*radius));
+
+
 			pos.setX(pos.getX()+radius);
 			pos.setY(pos.getY()+radius);
 			targetVec = Vector2.getRandomVector(Board.MAX_WIDTH, Board.MAX_HEIGHT);
 			myRandom = new Random();
 			startScore = (int)size*200;
-						
+
 		}
 		
 		public void update() {
@@ -60,7 +58,6 @@ public class Profile {
 		}
 		
 		private void move() {
-			
 			pos = pos.add(pos.vectorTowards(targetVec).normalise().mult(vel));
 			targetVec = targetVec.add(pos.vectorTowards(targetVec).normalise().mult(vel));
 			
@@ -113,21 +110,21 @@ public class Profile {
 			int x = (int)(pos.getX()-radius);
 			int y = (int)(pos.getY()-radius);
 			int paintSize = (int)(radius*2);
-			
-			
-			g.setClip(new Ellipse2D.Double(x, y,paintSize, paintSize));
-			g.setColor(Color.white);
-			g.fillOval(x, y,paintSize, paintSize);
+
+			g.setClip(new Ellipse2D.Double(x, y, paintSize, paintSize));
 			g.drawImage(image, x, y,paintSize, paintSize, null);
-			g.setColor(Color.black);
+
+			g.setClip(null);
+
+			g.setColor(Color.white);
+			g.setStroke(new BasicStroke(2, BasicStroke.JOIN_BEVEL, BasicStroke.CAP_BUTT));
 			g.drawOval(x, y,paintSize, paintSize);
-			Font small = new Font("Helvetica", Font.BOLD, 14);
-			g.setFont(small);
+
+			g.setFont(new Font("Seruf", Font.PLAIN, 20));
 			FontMetrics metr;
-    		metr = g.getFontMetrics(small);
-    		g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY()+metr.getHeight()/3));
-			
-			
+			metr = g.getFontMetrics();
+			g.drawString(name, (int)(pos.getX())-metr.stringWidth(name)/2, (int)(pos.getY() - radius - metr.getHeight() + 8));
+
 		}
 		
 		private void calcRadius() {

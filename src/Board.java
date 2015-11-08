@@ -32,7 +32,7 @@ public class Board extends JPanel implements ActionListener {
 	public static int B_HEIGHT = 800;
 	public static int MAX_WIDTH = 1400;
 	public static int MAX_HEIGHT = 800;
-	public static final int DELAY = 2;
+	public static final int DELAY = 1;
 	
 	public static ArrayList<Profile> players;
 	private static ArrayList<Profile> toRemove;
@@ -42,7 +42,7 @@ public class Board extends JPanel implements ActionListener {
     	
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	B_WIDTH = (int)screenSize.getWidth();
-    	B_HEIGHT = (int)screenSize.getHeight();
+    	B_HEIGHT = (int)screenSize.getHeight() - 50;
     	MAX_WIDTH = B_WIDTH;
     	MAX_HEIGHT = B_HEIGHT;
     	initGame();

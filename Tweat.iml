@@ -7,9 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="twitter4j-appengine" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="twitter4j-http2-support" level="project" />
     <orderEntry type="module" module-name="internal-util" />
     <orderEntry type="module" module-name="main" />
     <orderEntry type="module" module-name="main1" />
