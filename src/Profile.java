@@ -13,7 +13,6 @@ public class Profile {
 		private Vector2 pos;
 		private float size;
 		private float vel;
-		private Profile target;
 		private Vector2 targetVec;
 		private boolean alive;
 		private String name;
@@ -106,8 +105,7 @@ public class Profile {
 		}
 		
 		public void newTarget(Profile target) {
-			this.target = target;
-			targetVec = target.getVector();
+			this.targetVec = target.getVector();
 		}
 		
 		public Vector2 getVector() {
