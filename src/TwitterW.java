@@ -11,59 +11,40 @@ import java.util.ArrayList;
 
 public class TwitterW {
 
-    private static twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
-    private static TwitterStream stream;
-    private static FilterQuery listenQuery = new FilterQuery();
-    private static User gameUser;
-    private static boolean listenerAdded;
+    private twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
+    private TwitterStream stream;
+    private FilterQuery listenQuery = new FilterQuery();
+    private User gameUser;
+    private boolean listenerAdded;
 
-    static {
+	public void TwitterW(String handle, String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
         ConfigurationBuilder b = new ConfigurationBuilder();
-        b.setOAuthConsumerKey("xqlljOXRePfUjb5D48sXrUPUo").setOAuthConsumerSecret("zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC")
-                .setOAuthAccessToken("4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS").setOAuthAccessTokenSecret("1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk");
+        b.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
+                .setOAuthAccessToken(accessToken).setOAuthAccessTokenSecret(accessTokenSecret);
         Configuration config = b.build();
         stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
         try {
-            gameUser = getUser("tweatgame");
+            gameUser = getUser(handle);
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-    }
-
-  /*  public static void startFollowerRefresh() {
-        Thread followerThread = new Thread(){
-            @Override
-            public void run(){
-                while(true){
-                    try {
-                        ArrayList<User> newFollowers = getNewFollowers();
-                        for(User u : newFollowers){
-                            // Add user to world
-                            System.out.println(u.getScreenName() + " just followed!");
-                        }
-                        Thread.sleep(1000);
-                    } catch (Exception e) {}
-                }
-            }
-        };
-        followerThread.start();
-    } */
+	}
 
     /**
      * Add a status listener, which is fired whenever a listened user makes a tweet
      * @param listener
      */
-    public static void onTweet(StatusListener listener) {
+    public void onTweet(StatusListener listener) {
         listenerAdded = true;
         stream.addListener(listener);
     }
 
     /**
-     * Tweet from the game's account
+     * Tweet from the user's account
      * @param msg
      */
-    public static void tweet(String msg) throws TwitterException {
+    public void tweet(String msg) throws TwitterException {
         StatusUpdate status = new StatusUpdate(msg);
         wrapper.updateStatus(status);
         System.out.println(status);
@@ -77,13 +58,12 @@ public class TwitterW {
      * The listeners that have been added by onTweet() will be triggered when the user tweets
      * @param users
      */
-    public static void listen(User... users) {
+    public void listen(User... users) {
         if(!listenerAdded) throw new IllegalStateException("onTweet() must be called before calling listen()");
         long[] d = new long[users.length];
         int i = 0;
         for(User u : users){
             long id = u.getId();
-            System.out.println("Listening to id #" + id);
             d[i++] = id;
         }
         listenQuery.follow(d);
@@ -95,7 +75,7 @@ public class TwitterW {
      * @param user
      * @throws TwitterException
      */
-    public static void follow(User user) throws TwitterException {
+    public void follow(User user) throws TwitterException {
         long[] ids = wrapper.getFriendsIDs(gameUser.getId()).getIDs();
         for(long l : ids){
             if(l == user.getId()) return;
@@ -108,9 +88,13 @@ public class TwitterW {
      * @param user
      * @return
      */
-    public static int getFollowerCount(User user) {
+    public int getFollowerCount(User user) {
         return user.getFollowersCount();
     }
+
+	public ArrayList<User> getFollowers() throws TwitterException {
+		return getFollowers(gameUser);
+	}
 
     /**
      * Get a list of followers of the specified user.
@@ -118,7 +102,7 @@ public class TwitterW {
      * @return
      * @throws TwitterException
      */
-    public static ArrayList<User> getFollowers(User user) throws TwitterException{
+    public ArrayList<User> getFollowers(User user) throws TwitterException{
 
         ArrayList<User> followersArrayList = new ArrayList<>(getFollowerCount(gameUser));
 
@@ -136,14 +120,14 @@ public class TwitterW {
     }
 
     /**
-     * Get the user's game score.
+     * Get the user's blob size.
      * In the case of the methods below returning 0, this method will return 1.
      * <br>
      * Dependent on getFollowers(), getFollowing() and getLikes()
      * @param user
      * @return
      */
-    public static float getSize(User user) {
+    public float getSize(User user) {
         float size =  (float)Math.log(1 + getFollowerCount(user) + ((float)getLikes(user) / (getFollowing(user) + 1)));
         if(size < 1) return 1;
 
@@ -155,42 +139,58 @@ public class TwitterW {
      * @param handle
      * @return
      */
-    public static User getUser(String handle) throws TwitterException {
+    public User getUser(String handle) throws TwitterException {
         ResponseList<User> response = wrapper.lookupUsers(handle);
         return response.size() == 0 ? null : response.get(0);
     }
 
-    public static User getUser(long id) throws TwitterException {
+    public User getUser(long id) throws TwitterException {
         ResponseList<User> response = wrapper.lookupUsers(id);
         return response.size() == 0 ? null : response.get(0);
     }
+
+	public int getFollowing() {
+		return getFollowing(gameUser);
+	}
 
     /**
      * Get the number of users that the specified user follows
      * @param user
      * @return
      */
-    public static int getFollowing(User user) {
+    public int getFollowing(User user) {
         return user.getFriendsCount();
     }
+
+	public int getLikes() {
+		return getLikes(gameUser);
+	}
 
     /**
      * Get the number of tweets that the user has favourited/liked
      * @param user
      * @return
      */
-    public static int getLikes(User user) {
+    public  int getLikes(User user) {
         return user.getFavouritesCount();
     }
+
+	public String getProfileImageURL() {
+		return getProfileImageURL(gameUser);
+	}
 
     /**
      * Get the URL of the user's profile image
      * @param user
      * @return
      */
-    public static String getProfileImageURL(User user) {
+    public String getProfileImageURL(User user) {
         return user.getProfileImageURL();
     }
+
+	public BufferedImage getProfileImage() {
+		return getProfileImage(gameUser);
+	}
 
     /**
      * Gets the user's profile image.
@@ -199,7 +199,7 @@ public class TwitterW {
      * @param user
      * @return
      */
-    public static BufferedImage getProfileImage(User user) {
+    public BufferedImage getProfileImage(User user) {
         File dest;
         try {
             dest = File.createTempFile("res/tmp/" + user.getName(), ".png");
