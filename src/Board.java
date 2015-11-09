@@ -43,8 +43,13 @@ public class Board extends JPanel implements ActionListener {
 	
 	public static ArrayList<Profile> players;
 	private static ArrayList<User> followers;
+
+    public static TwitterW twitterW;
+
+    private String username = "aranscope";
     
     public Board() {
+        twitterW = new TwitterW(username, "xqlljOXRePfUjb5D48sXrUPUo", "zzq4TpUANIwQTXIiw5Sbio1OHuzAEHUbo4bJMx4RKgoemPTtNC", "4134402347-0oKGUVTDnFRZBsj4NEhH2ZWWN2a7Yd4QiP2flsS", "1HOwBLYnEVevVUS9jQfFPsE1UnGoed4ybrARsmq9XYtRk");
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	B_WIDTH = (int)screenSize.getWidth();
     	B_HEIGHT = (int)screenSize.getHeight() - 50;
@@ -64,7 +69,7 @@ public class Board extends JPanel implements ActionListener {
 
     	followers = new ArrayList<>();
     	try{
-    		followers = TwitterW.getFollowers(TwitterW.getUser("tweatgame"));  		
+    		followers = twitterW.getFollowers();
         }catch(Exception e){}
     	timer = new Timer(DELAY, this);
          
@@ -92,13 +97,13 @@ public class Board extends JPanel implements ActionListener {
         leaderBoard = getLeaderboard();
 
         try {
-            TwitterW.onTweet(new StatusListener() {
-            	String pattern = "@(\\w+)";
-            	Pattern r = Pattern.compile(pattern);
-            	
+            twitterW.onTweet(new StatusListener() {
+                String pattern = "@(\\w+)";
+                Pattern r = Pattern.compile(pattern);
+
                 @Override
                 public void onStatus(Status status) {
-                    if(tweets.size() > 4){
+                    if (tweets.size() > 4) {
                         tweets.remove(0);
                     }
 
@@ -106,23 +111,24 @@ public class Board extends JPanel implements ActionListener {
 
                     Matcher m = r.matcher(status.getText());
                     String userName = "";
-                    
-                    if (m.find( )) {
-            	    	userName = m.group(1).toLowerCase();
-            	    }
-                    
-                    top:for (Profile p: players) {
-                    	if (p.getName().equalsIgnoreCase("@"+status.getUser().getScreenName())) {	
-                    		p.setTweet(status.getText());
 
-                    		p.setSize(p.getSize()+4/p.getSize());
-                    		for (Profile q: players) {
-                    			if (q.getName().equalsIgnoreCase("@"+userName)) {
-                    				p.newTarget(q);
-                    				break top;
-                    			}
-                    		}
-                    	}
+                    if (m.find()) {
+                        userName = m.group(1).toLowerCase();
+                    }
+
+                    top:
+                    for (Profile p : players) {
+                        if (p.getName().equalsIgnoreCase("@" + status.getUser().getScreenName())) {
+                            p.setTweet(status.getText());
+
+                            p.setSize(p.getSize() + 4 / p.getSize());
+                            for (Profile q : players) {
+                                if (q.getName().equalsIgnoreCase("@" + userName)) {
+                                    p.newTarget(q);
+                                    break top;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -156,7 +162,7 @@ public class Board extends JPanel implements ActionListener {
             for(User user: followers){
                 us[i++] = user;
             }
-            TwitterW.listen(us);
+            twitterW.listen(us);
         } catch (Exception e) {
         	e.printStackTrace();
         }

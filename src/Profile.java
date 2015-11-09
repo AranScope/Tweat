@@ -27,6 +27,8 @@ public class Profile {
 
 		private long startTime = 0;
 
+	TwitterW twitterW = Board.twitterW;
+
 	public Vector2 getTargetVec(){
 		return this.targetVec;
 	}
@@ -47,8 +49,8 @@ public class Profile {
 			}catch(IOException ex){ex.printStackTrace();}
 
 			this.user = user;
-			image = TwitterW.getProfileImage(user);
-			size = TwitterW.getSize(user);
+			image = twitterW.getProfileImage(user);
+			size = twitterW.getSize(user);
 			name = "@"+user.getScreenName();
 			vel = 1.25f/size;
 			calcRadius();
@@ -220,13 +222,13 @@ public class Profile {
 
 		public void reset() {
 			this.setVector(Vector2.getRandomVector((Board.MAX_WIDTH - 2 * this.getRadius()), (Board.MAX_HEIGHT - 2 * this.getRadius())));
-			this.setSize(TwitterW.getSize(this.getUser()));
+			this.setSize(twitterW.getSize(this.getUser()));
 			this.tweet = "";
 		}
 
 //		try {
 //			int msg = this.getRand().nextInt(deathMsgs.length);
-//			TwitterW.tweet(String.format(deathMsgs[msg], this.getName()));
+//			twitterW.tweet(String.format(deathMsgs[msg], this.getName()));
 //		} catch(TwitterException e) {
 //			e.printStackTrace();
 //		}

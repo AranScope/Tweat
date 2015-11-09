@@ -17,7 +17,7 @@ public class TwitterW {
     private User gameUser;
     private boolean listenerAdded;
 
-	public void TwitterW(String handle, String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
+	public TwitterW(String handle, String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
         ConfigurationBuilder b = new ConfigurationBuilder();
         b.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
                 .setOAuthAccessToken(accessToken).setOAuthAccessTokenSecret(accessTokenSecret);
@@ -92,17 +92,12 @@ public class TwitterW {
         return user.getFollowersCount();
     }
 
-	public ArrayList<User> getFollowers() throws TwitterException {
-		return getFollowers(gameUser);
-	}
-
     /**
      * Get a list of followers of the specified user.
-     * @param user
      * @return
      * @throws TwitterException
      */
-    public ArrayList<User> getFollowers(User user) throws TwitterException{
+    public ArrayList<User> getFollowers() throws TwitterException{
 
         ArrayList<User> followersArrayList = new ArrayList<>(getFollowerCount(gameUser));
 
