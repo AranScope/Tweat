@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class TwitterW {
 
-    private twitter4j.Twitter wrapper = TwitterFactory.getSingleton();
+    private Twitter wrapper = TwitterFactory.getSingleton();
     private TwitterStream stream;
     private FilterQuery listenQuery = new FilterQuery();
     private User gameUser;
@@ -24,6 +24,7 @@ public class TwitterW {
         Configuration config = b.build();
         stream = new TwitterStreamFactory(config).getInstance();
         wrapper = new TwitterFactory(config).getInstance();
+
         try {
             gameUser = getUser(handle);
         } catch (TwitterException e) {
@@ -104,7 +105,7 @@ public class TwitterW {
         long cursor = -1L;
         IDs ids;
         do {
-            ids = wrapper.getFollowersIDs(cursor);
+            ids = wrapper.getFollowersIDs(gameUser.getId(), cursor);
             for(long id : ids.getIDs()) {
                 User u = getUser(id);
                 followersArrayList.add(u);

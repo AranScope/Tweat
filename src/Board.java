@@ -74,7 +74,7 @@ public class Board extends JPanel implements ActionListener {
     	timer = new Timer(DELAY, this);
          
         players = new ArrayList<>();
-        
+
         for (User u: followers) {
         	Profile profile = new Profile(u);
         	boolean intersects = true;
@@ -82,9 +82,11 @@ public class Board extends JPanel implements ActionListener {
         	if(players.size()== 0) players.add(profile);
         	else while(intersects){
         		profile.setVector(Vector2.getRandomVector((MAX_WIDTH - 2 * profile.getRadius()), (MAX_HEIGHT-2*profile.getRadius())));
-        		for(int x = 0; x < players.size(); x++){
+
+                for(int x = 0; x < players.size(); x++){
         			if(players.get(x) != profile){
         				intersects = profile.intersects(players.get(x));
+                        intersects = false;
         				if(intersects) break;
         			}
         		}
