@@ -1,3 +1,5 @@
+<?php
+
 require_once("TwitterApiExchange.php");
 
 class Twitter {
@@ -27,3 +29,5 @@ class Twitter {
 	}
 
 }
+
+?>
